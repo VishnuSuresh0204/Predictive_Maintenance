@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}PREDICT-X // Autonomous Predictive Maintenance{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/futuristic.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <!-- Futuristic Public Top Navbar -->
+  <nav class="futuristic-navbar" id="main-nav">
+    <div class="nav-container">
+      <a href="/" class="brand-wrapper">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">PREDICT<span class="text-cyan">-X</span></span>
+          <span class="brand-sub">
+            <span class="pulse-dot"></span>
+            NEURAL TELEMETRY GRID
+          </span>
+        </div>
+      </a>
+
+      <!-- Telemetry status readout -->
+      <div class="nav-telemetry">
+        <div class="nav-telemetry-item">
+          <span class="text-cyan">STATUS:</span>
+          <span class="text-green">ONLINE</span>
+        </div>
+        <div class="nav-telemetry-item">
+          <span class="text-cyan">SYS_TIME:</span>
+          <span class="cyber-clock font-mono">--:--:-- UTC</span>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <ul class="nav-links">
+        <li><a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">Portal Home</a></li>
+        <li><a href="/#features" class="nav-link">Capabilities</a></li>
+        <li><a href="/#diagnostics" class="nav-link">Diagnostics</a></li>
+        <li><span class="entity-badge badge-public">PUBLIC ACCESS</span></li>
+      </ul>
+
+      <!-- Action Buttons -->
+      <div class="nav-actions">
+        {% if request.user.is_authenticated %}
+          {% if request.user.usertype == "Admin" or request.user.is_superuser %}
+            <a href="/admin-home/" class="cyber-btn cyber-btn-cyan">Command Center</a>
+          {% else %}
+            <a href="/org-home/" class="cyber-btn cyber-btn-cyan">Org Hub</a>
+          {% endif %}
+          <a href="/logout/" class="cyber-btn cyber-btn-ghost">Logout</a>
+        {% else %}
+          <a href="/login/" class="cyber-btn cyber-btn-ghost {% if request.path == '/login/' %}active{% endif %}">Terminal Login</a>
+          <a href="/register/" class="cyber-btn cyber-btn-cyan {% if request.path == '/register/' %}active{% endif %}">Register Org</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- Flash Messages Alert Section -->
+  {% if messages %}
+  <div class="messages-container">
+    {% for message in messages %}
+    <div class="cyber-alert {% if message.tags == 'error' %}cyber-alert-error{% elif message.tags == 'success' %}cyber-alert-success{% else %}cyber-alert-info{% endif %}">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <span style="font-family: var(--font-display); font-size: 0.85rem; letter-spacing: 0.1em;">
+          [{% if message.tags %}{{ message.tags|upper }}{% else %}ALERT{% endif %}]
+        </span>
+        <span>{{ message }}</span>
+      </div>
+      <button type="button" class="cyber-alert-close" aria-label="Dismiss">&times;</button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Main Content Body -->
+  <main class="main-wrapper">
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <!-- Futuristic Footer -->
+  <footer class="futuristic-footer">
+    <div class="footer-container">
+      <div class="footer-info">
+        <span class="text-cyan font-tech" style="font-weight: 700; letter-spacing: 0.1em;">PREDICT-X // CORE v4.8</span>
+        <span>Industrial IoT & Machine Telemetry Intelligence</span>
+        <span>&copy; 2026 Autonomous Neural Systems. All telemetry secured.</span>
+      </div>
+      <div class="footer-telemetry">
+        <span class="pulse-dot"></span>
+        <span class="cyber-clock">--:--:-- UTC</span>
+        <span style="margin-left: 0.5rem; color: var(--text-dim);">| SHA-256 ENCRYPTED</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{% static 'js/futuristic.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
