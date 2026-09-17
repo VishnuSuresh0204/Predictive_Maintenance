@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}ADMIN CONSOLE // PREDICT-X Control Center{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/futuristic.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="entity-admin-body">
+  <!-- Futuristic Admin Top Navbar -->
+  <nav class="futuristic-navbar" style="border-bottom-color: var(--border-cyan);">
+    <div class="nav-container">
+      <a href="/admin-home/" class="brand-wrapper">
+        <div class="brand-icon" style="border-color: var(--red); box-shadow: 0 0 15px var(--red-glow);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#ff3366" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">PREDICT<span class="text-red">-ADMIN</span></span>
+          <span class="brand-sub" style="color: var(--red);">
+            <span class="pulse-dot" style="background: var(--red); box-shadow: 0 0 8px var(--red);"></span>
+            ROOT COMMAND DIRECTORY
+          </span>
+        </div>
+      </a>
+
+      <!-- Telemetry status readout -->
+      <div class="nav-telemetry">
+        <div class="nav-telemetry-item">
+          <span class="text-red">CLUSTER:</span>
+          <span class="text-green">100% OPERATIONAL</span>
+        </div>
+        <div class="nav-telemetry-item">
+          <span class="text-cyan">SYS_TIME:</span>
+          <span class="cyber-clock font-mono">--:--:-- UTC</span>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <ul class="nav-links">
+        <li><a href="/admin-home/" class="nav-link active">Dashboard</a></li>
+        <li><a href="#organizations-section" class="nav-link">Organizations</a></li>
+        <li><a href="#telemetry-section" class="nav-link">Fleet Ingest</a></li>
+        <li><span class="entity-badge badge-admin">ROOT PRIVILEGES</span></li>
+      </ul>
+
+      <!-- User Info & Logout -->
+      <div class="nav-actions">
+        <div class="stat-pill" style="padding: 0.35rem 0.85rem; border-color: rgba(255, 51, 102, 0.4);">
+          <span class="stat-pill-label" style="color: var(--red);">OPERATOR</span>
+          <span class="stat-pill-value" style="font-size: 0.85rem; color: #fff;">{{ request.user.username|default:"Admin Root" }}</span>
+        </div>
+        <a href="/logout/" class="cyber-btn cyber-btn-red">Terminate Session</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Admin Sub-Header Quick Status Banner -->
+  <header class="entity-header-banner">
+    <div class="entity-header-container">
+      <div class="entity-title-group">
+        <h1>
+          <span class="text-red">&#9654;</span>
+          {% block page_title %}SYSTEM ADMINISTRATION CONSOLE{% endblock %}
+        </h1>
+        <p>{% block page_subtitle %}Predictive maintenance neural engine, tenant management & global machinery logs{% endblock %}</p>
+      </div>
+      <div class="entity-quick-stats">
+        <div class="stat-pill">
+          <span class="stat-pill-label">Global Health Index</span>
+          <span class="stat-pill-value text-green" data-telemetry-osc data-base="99.4" data-variance="0.2" data-unit="%">99.4%</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-pill-label">AI Inference Engine</span>
+          <span class="stat-pill-value text-cyan">ACTIVE (v2.4)</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-pill-label">Ingest Frequency</span>
+          <span class="stat-pill-value text-purple" data-telemetry-osc data-base="1024" data-variance="12" data-unit=" msg/s">1024 msg/s</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Secondary Admin Navigation Tabs -->
+  <div class="secondary-nav">
+    <div class="secondary-nav-container">
+      <a href="/admin-home/" class="sub-link active">&#9672; Cluster Overview</a>
+      <a href="#organizations-section" class="sub-link">&#9672; Registered Tenants</a>
+      <a href="#telemetry-section" class="sub-link">&#9672; Sensor Telemetry Nodes</a>
+      <a href="#anomaly-alerts" class="sub-link">&#9672; Anomaly Incidents</a>
+      <a href="#security-audit" class="sub-link">&#9672; Audit & Security</a>
+    </div>
+  </div>
+
+  <!-- Messages Alert Section -->
+  {% if messages %}
+  <div class="messages-container">
+    {% for message in messages %}
+    <div class="cyber-alert {% if message.tags == 'error' %}cyber-alert-error{% elif message.tags == 'success' %}cyber-alert-success{% else %}cyber-alert-info{% endif %}">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <span style="font-family: var(--font-display); font-size: 0.85rem; letter-spacing: 0.1em;">
+          [{% if message.tags %}{{ message.tags|upper }}{% else %}ALERT{% endif %}]
+        </span>
+        <span>{{ message }}</span>
+      </div>
+      <button type="button" class="cyber-alert-close" aria-label="Dismiss">&times;</button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Admin Main Content -->
+  <main class="main-wrapper">
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <!-- Admin Footer -->
+  <footer class="futuristic-footer">
+    <div class="footer-container">
+      <div class="footer-info">
+        <span class="text-red font-tech" style="font-weight: 700;">PREDICT-X // ADMIN PROTOCOL</span>
+        <span>Global IoT Sensor Matrix Node Controller</span>
+        <span>Strictly Restricted - All Administrative Actions Monitored</span>
+      </div>
+      <div class="footer-telemetry">
+        <span class="pulse-dot" style="background: var(--red); box-shadow: 0 0 8px var(--red);"></span>
+        <span class="cyber-clock">--:--:-- UTC</span>
+        <span style="margin-left: 0.5rem; color: var(--text-dim);">| ROOT NODE #01</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{% static 'js/futuristic.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
