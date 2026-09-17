@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}PREDICT-X // Next-Gen Predictive Maintenance Engine{% endblock %}
+
+{% block content %}
+<div class="container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-pill">
+      <span class="pulse-dot"></span>
+      NEURAL TELEMETRY 4.0 ACTIVE &bull; INDUSTRIAL IOT SYNCHRONIZED
+    </div>
+    <h1 class="hero-title">
+      AUTONOMOUS <span class="hero-title-gradient">PREDICTIVE MAINTENANCE</span><br>
+      POWERED BY DIGITAL TWINS
+    </h1>
+    <p class="hero-description">
+      Eliminate unplanned industrial downtime. PREDICT-X ingests high-frequency vibration, thermal, acoustic, and pressure telemetry to detect micro-anomalies weeks before catastrophic machine breakdown.
+    </p>
+
+    <div class="hero-cta-group">
+      {% if request.user.is_authenticated %}
+        {% if request.user.usertype == "Admin" or request.user.is_superuser %}
+          <a href="/admin-home/" class="cyber-btn cyber-btn-cyan cyber-btn-lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            Enter Admin Command Console
+          </a>
+        {% else %}
+          <a href="/org-home/" class="cyber-btn cyber-btn-cyan cyber-btn-lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line></svg>
+            Enter Organization Hub
+          </a>
+        {% endif %}
+      {% else %}
+        <a href="/register/" class="cyber-btn cyber-btn-cyan cyber-btn-lg">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+          Register Industrial Facility
+        </a>
+        <a href="/login/" class="cyber-btn cyber-btn-purple cyber-btn-lg">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+          Access Terminal Login
+        </a>
+      {% endif %}
+    </div>
+
+    <!-- Live Telemetry HUD Preview -->
+    <div class="telemetry-preview-hud cyber-panel" id="diagnostics">
+      <div class="hud-header">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <span class="pulse-dot"></span>
+          <span style="font-weight: 700; color: #fff; letter-spacing: 0.1em;">REAL-TIME TELEMETRY MATRIX // GLOBAL CLUSTER OVERVIEW</span>
+        </div>
+        <div>
+          <span class="font-mono text-cyan">LATENCY: <span data-telemetry-osc data-base="14" data-variance="2" data-unit="ms">14ms</span></span>
+        </div>
+      </div>
+      <div class="hud-body">
+        <div class="hud-stat-item">
+          <div class="label">Total Telemetry Streams</div>
+          <div class="value text-cyan" data-telemetry-osc data-base="24810" data-variance="25" data-unit="">24,810</div>
+          <div class="sub">&uarr; 410 packets / sec ingested</div>
+          <div class="cyber-progress-track">
+            <div class="cyber-progress-fill" style="width: 88%;"></div>
+          </div>
+        </div>
+
+        <div class="hud-stat-item">
+          <div class="label">Predictive Accuracy</div>
+          <div class="value text-green">99.85%</div>
+          <div class="sub">Trained on 4.2M failure cycles</div>
+          <div class="cyber-progress-track">
+            <div class="cyber-progress-fill" style="width: 99.8%; background: var(--green);"></div>
+          </div>
+        </div>
+
+        <div class="hud-stat-item">
+          <div class="label">Mean Time Between Failures</div>
+          <div class="value text-purple" data-telemetry-osc data-base="3420" data-variance="10" data-unit="h">3,420h</div>
+          <div class="sub">+38% extension across fleets</div>
+          <div class="cyber-progress-track">
+            <div class="cyber-progress-fill" style="width: 76%; background: var(--purple);"></div>
+          </div>
+        </div>
+
+        <div class="hud-stat-item">
+          <div class="label">Catastrophic Failures Avoided</div>
+          <div class="value text-amber">1,248</div>
+          <div class="sub">$14.2M estimated downtime saved</div>
+          <div class="cyber-progress-track">
+            <div class="cyber-progress-fill" style="width: 92%; background: var(--amber);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Capabilities & Feature Grid -->
+  <section style="margin: 4rem 0;" id="features">
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <span class="font-tech text-cyan" style="font-size: 0.9rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;">
+        [ ADVANCED TELEMETRY CAPABILITIES ]
+      </span>
+      <h2 style="font-size: 2.3rem; margin-top: 0.5rem;">NEXT-GEN MACHINERY INTELLIGENCE</h2>
+    </div>
+
+    <div class="grid-3">
+      <div class="glass-panel glass-panel-hover feature-card">
+        <div class="feature-icon-box">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+        </div>
+        <h3>Vibration Spectral Analysis</h3>
+        <p>
+          Continuous fast-Fourier transform (FFT) and wavelet decomposition of accelerometer feeds detect micro-bearing wear, shaft misalignment, and harmonic imbalances in heavy rotators.
+        </p>
+      </div>
+
+      <div class="glass-panel glass-panel-hover feature-card">
+        <div class="feature-icon-box" style="border-color: var(--purple); color: var(--purple); background: rgba(168, 85, 247, 0.1);">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path></svg>
+        </div>
+        <h3>Thermal & Infrared Profiling</h3>
+        <p>
+          Physics-guided thermodynamic simulations model heat dissipation curves across stator windings, hydraulic pumps, and gearboxes, isolating thermal runway hours before overheat trip.
+        </p>
+      </div>
+
+      <div class="glass-panel glass-panel-hover feature-card">
+        <div class="feature-icon-box" style="border-color: var(--green); color: var(--green); background: rgba(0, 255, 136, 0.1);">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
+        </div>
+        <h3>Remaining Useful Life (RUL)</h3>
+        <p>
+          Deep neural regression models compute precise Remaining Useful Life distributions for every monitored machine asset, scheduling maintenance during low-throughput windows.
+        </p>
+      </div>
+
+      <div class="glass-panel glass-panel-hover feature-card">
+        <div class="feature-icon-box" style="border-color: var(--amber); color: var(--amber); background: rgba(255, 183, 3, 0.1);">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        </div>
+        <h3>Digital Twin Synchronization</h3>
+        <p>
+          Holographic 3D digital twins mirror your plant's heavy machinery in real-time, mapping stress vectors, acoustic emissions, and motor current signature analysis (MCSA).
+        </p>
+      </div>
+
+      <div class="glass-panel glass-panel-hover feature-card">
+        <div class="feature-icon-box">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        </div>
+        <h3>Multi-Tenant Organization Hub</h3>
+        <p>
+          Isolated cryptographically secured environments for each industrial enterprise. Manage separate machinery fleets, technician credentials, and telemetry streams seamlessly.
+        </p>
+      </div>
+
+      <div class="glass-panel glass-panel-hover feature-card">
+        <div class="feature-icon-box" style="border-color: var(--red); color: var(--red); background: rgba(255, 51, 102, 0.1);">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        </div>
+        <h3>Edge AI Anomaly Alerts</h3>
+        <p>
+          Sub-second emergency tripping and automated work-order generation dispatched to plant floor technicians when sensory thresholds violate safety bounds.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Simulated Machinery Matrix Banner -->
+  <section class="glass-panel cyber-panel" style="margin: 4rem 0 2rem 0; padding: 2.5rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+      <div>
+        <h3 style="font-size: 1.5rem; color: #fff;">LIVE INDUSTRIAL FLEET STATUS</h3>
+        <p class="font-tech text-muted" style="font-size: 0.95rem;">Simulated high-load telemetry feed across monitored manufacturing cells</p>
+      </div>
+      <a href="/register/" class="cyber-btn cyber-btn-cyan">Connect Your Facility &rarr;</a>
+    </div>
+
+    <div class="table-responsive">
+      <table class="cyber-table">
+        <thead>
+          <tr>
+            <th>ASSET ID</th>
+            <th>EQUIPMENT TYPE</th>
+            <th>FACILITY / ORG</th>
+            <th>OPERATIONAL LOAD</th>
+            <th>TEMP (C&deg;)</th>
+            <th>VIBRATION</th>
+            <th>HEALTH STATUS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="font-mono text-cyan">#TRB-902</td>
+            <td>Hydro Turbine Alpha</td>
+            <td>Apex Energy Corp</td>
+            <td>94.2%</td>
+            <td><span data-telemetry-osc data-base="64.2" data-variance="0.8" data-unit="&deg;C">64.2&deg;C</span></td>
+            <td><span data-telemetry-osc data-base="1.4" data-variance="0.2" data-unit=" mm/s">1.4 mm/s</span></td>
+            <td><span class="status-pill status-operational">&#9679; NOMINAL</span></td>
+          </tr>
+          <tr>
+            <td class="font-mono text-cyan">#EXT-418</td>
+            <td>Heavy Extruder H-9</td>
+            <td>Titan Polymer Dynamics</td>
+            <td>81.5%</td>
+            <td><span data-telemetry-osc data-base="88.6" data-variance="1.1" data-unit="&deg;C">88.6&deg;C</span></td>
+            <td><span data-telemetry-osc data-base="3.8" data-variance="0.4" data-unit=" mm/s">3.8 mm/s</span></td>
+            <td><span class="status-pill status-warning">&#9650; BEARING WEAR</span></td>
+          </tr>
+          <tr>
+            <td class="font-mono text-cyan">#CNC-104</td>
+            <td>5-Axis Milling Unit</td>
+            <td>Quantum Robotics Ltd</td>
+            <td>72.0%</td>
+            <td><span data-telemetry-osc data-base="42.1" data-variance="0.5" data-unit="&deg;C">42.1&deg;C</span></td>
+            <td><span data-telemetry-osc data-base="0.9" data-variance="0.1" data-unit=" mm/s">0.9 mm/s</span></td>
+            <td><span class="status-pill status-operational">&#9679; NOMINAL</span></td>
+          </tr>
+          <tr>
+            <td class="font-mono text-cyan">#PMP-773</td>
+            <td>High-Pressure Cryo Pump</td>
+            <td>Hyperion Aerospace</td>
+            <td>98.7%</td>
+            <td><span data-telemetry-osc data-base="104.5" data-variance="1.5" data-unit="&deg;C">104.5&deg;C</span></td>
+            <td><span data-telemetry-osc data-base="5.6" data-variance="0.6" data-unit=" mm/s">5.6 mm/s</span></td>
+            <td><span class="status-pill status-critical">&#9888; CRITICAL RUL</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}
