@@ -8,10 +8,17 @@ def home(request):
     return render(request, "home.html")
 
 def admin_home(request):
-    return render(request, "ADMIN/home.html")
+    organizations = Organization.objects.select_related('login').all()
+    return render(request, "ADMIN/home.html", {"organizations": organizations})
 
 def org_home(request):
-    return render(request, "ORGANIZATION/home.html")
+    org = None
+    if request.user.is_authenticated:
+        try:
+            org = Organization.objects.filter(login=request.user).first()
+        except Exception:
+            pass
+    return render(request, "ORGANIZATION/home.html", {"org": org})
 
 def register(request):
     if request.method == "POST":
