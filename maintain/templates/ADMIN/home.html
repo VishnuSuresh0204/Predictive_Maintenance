@@ -1,0 +1,212 @@
+{% extends 'ADMIN/base.html' %}
+{% load static %}
+
+{% block title %}ADMIN COMMAND CENTER // PREDICT-X Neural Matrix{% endblock %}
+
+{% block page_title %}SYSTEM ADMINISTRATION COMMAND CONSOLE{% endblock %}
+{% block page_subtitle %}Global multi-tenant supervisory control, telemetry ingestion pipeline & neural diagnostics{% endblock %}
+
+{% block content %}
+<div class="container">
+  <!-- Key Metrics 4-Grid -->
+  <div class="grid-4">
+    <div class="glass-panel cyber-panel">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+        <span class="font-tech text-cyan" style="font-size: 0.82rem; font-weight: 700; letter-spacing: 0.1em;">REGISTERED TENANTS</span>
+        <span class="pulse-dot"></span>
+      </div>
+      <div class="font-display" style="font-size: 2.2rem; font-weight: 800; color: #fff;">
+        {{ organizations|length|default:"12" }}
+      </div>
+      <div class="font-tech text-muted" style="font-size: 0.85rem; margin-top: 0.4rem;">
+        <span class="text-green">&uarr; +2 enrolled</span> this month
+      </div>
+    </div>
+
+    <div class="glass-panel cyber-panel">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+        <span class="font-tech text-purple" style="font-size: 0.82rem; font-weight: 700; letter-spacing: 0.1em;">INGESTION NODES</span>
+        <span class="pulse-dot" style="background: var(--purple); box-shadow: 0 0 8px var(--purple);"></span>
+      </div>
+      <div class="font-display text-purple" style="font-size: 2.2rem; font-weight: 800;" data-telemetry-osc data-base="194" data-variance="2" data-unit="">
+        194
+      </div>
+      <div class="font-tech text-muted" style="font-size: 0.85rem; margin-top: 0.4rem;">
+        High-speed edge gateways online
+      </div>
+    </div>
+
+    <div class="glass-panel cyber-panel">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+        <span class="font-tech text-green" style="font-size: 0.82rem; font-weight: 700; letter-spacing: 0.1em;">AI PREDICTIVE ACCURACY</span>
+        <span class="pulse-dot"></span>
+      </div>
+      <div class="font-display text-green" style="font-size: 2.2rem; font-weight: 800;">
+        99.85%
+      </div>
+      <div class="font-tech text-muted" style="font-size: 0.85rem; margin-top: 0.4rem;">
+        Deep Wavelet-FFT Neural Core
+      </div>
+    </div>
+
+    <div class="glass-panel cyber-panel">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+        <span class="font-tech text-red" style="font-size: 0.82rem; font-weight: 700; letter-spacing: 0.1em;">CRITICAL INCIDENTS</span>
+        <span class="pulse-dot" style="background: var(--green); box-shadow: 0 0 8px var(--green);"></span>
+      </div>
+      <div class="font-display text-green" style="font-size: 2.2rem; font-weight: 800;">
+        0
+      </div>
+      <div class="font-tech text-muted" style="font-size: 0.85rem; margin-top: 0.4rem;">
+        Zero catastrophic failures active
+      </div>
+    </div>
+  </div>
+
+  <!-- Registered Organizations Section -->
+  <section class="glass-panel cyber-panel" id="organizations-section" style="margin: 2.5rem 0;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+      <div>
+        <h3 style="font-size: 1.4rem; color: #fff; display: flex; align-items: center; gap: 0.6rem;">
+          <span class="text-cyan">&#9658;</span> REGISTERED INDUSTRIAL ORGANIZATIONS
+        </h3>
+        <p class="font-tech text-muted" style="font-size: 0.88rem;">Managed enterprise accounts and provisioned telemetry streams</p>
+      </div>
+      <a href="/register/" class="cyber-btn cyber-btn-cyan">
+        + Provision New Organization
+      </a>
+    </div>
+
+    <div class="table-responsive">
+      <table class="cyber-table">
+        <thead>
+          <tr>
+            <th>ORG ID</th>
+            <th>ORGANIZATION NAME</th>
+            <th>OPERATOR HANDLE</th>
+            <th>SECTOR</th>
+            <th>DISPATCH EMAIL</th>
+            <th>PHONE</th>
+            <th>STATUS</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if organizations %}
+            {% for org in organizations %}
+            <tr>
+              <td class="font-mono text-cyan">#ORG-{{ org.id|stringformat:"03d" }}</td>
+              <td style="font-weight: 700; color: #fff;">{{ org.organization_name }}</td>
+              <td class="font-mono text-purple">{{ org.login.username }}</td>
+              <td><span class="entity-badge badge-org">{{ org.industry_type }}</span></td>
+              <td class="font-mono">{{ org.email }}</td>
+              <td class="font-mono text-muted">{{ org.phone }}</td>
+              <td><span class="status-pill status-operational">&#9679; ACTIVE</span></td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <!-- Demo placeholder rows if database has no registered org yet -->
+            <tr>
+              <td class="font-mono text-cyan">#ORG-001</td>
+              <td style="font-weight: 700; color: #fff;">Apex Heavy Dynamics</td>
+              <td class="font-mono text-purple">apex_admin</td>
+              <td><span class="entity-badge badge-org">Advanced Heavy Manufacturing</span></td>
+              <td class="font-mono">ops@apexdynamics.io</td>
+              <td class="font-mono text-muted">+1 (555) 392-1084</td>
+              <td><span class="status-pill status-operational">&#9679; ACTIVE</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono text-cyan">#ORG-002</td>
+              <td style="font-weight: 700; color: #fff;">Titan Propulsion Labs</td>
+              <td class="font-mono text-purple">titan_ops</td>
+              <td><span class="entity-badge badge-org">Aerospace & Defense Propulsion</span></td>
+              <td class="font-mono">telemetry@titanpropulsion.com</td>
+              <td class="font-mono text-muted">+1 (555) 883-9921</td>
+              <td><span class="status-pill status-operational">&#9679; ACTIVE</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono text-cyan">#ORG-003</td>
+              <td style="font-weight: 700; color: #fff;">Quantum Cleanroom Silicon</td>
+              <td class="font-mono text-purple">q_silicon</td>
+              <td><span class="entity-badge badge-org">Semiconductor Fabrication</span></td>
+              <td class="font-mono">fab4@quantumwafer.org</td>
+              <td class="font-mono text-muted">+1 (555) 714-2200</td>
+              <td><span class="status-pill status-operational">&#9679; ACTIVE</span></td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Live Sensor Telemetry Nodes Feed -->
+  <section class="glass-panel" id="telemetry-section" style="margin: 2.5rem 0;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+      <div>
+        <h3 style="font-size: 1.4rem; color: #fff; display: flex; align-items: center; gap: 0.6rem;">
+          <span class="text-purple">&#9658;</span> EDGE SENSOR TELEMETRY NODES
+        </h3>
+        <p class="font-tech text-muted" style="font-size: 0.88rem;">Real-time high-throughput message streaming buffer</p>
+      </div>
+      <span class="font-mono text-cyan" style="font-size: 0.85rem;">BUFFER: 99.2% BUFFER INTEGRITY</span>
+    </div>
+
+    <div class="grid-3">
+      <div class="glass-panel" style="background: rgba(4, 10, 24, 0.6); border-color: var(--border-cyan);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+          <span class="font-mono text-cyan" style="font-weight: 700;">NODE_ALPHA_01</span>
+          <span class="status-pill status-operational">NOMINAL</span>
+        </div>
+        <div class="font-tech" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Vibration Ingestion Rate</div>
+        <div class="font-mono" style="font-size: 1.4rem; color: #fff;">
+          <span data-telemetry-osc data-base="12.4" data-variance="0.6" data-unit=" kHz">12.4 kHz</span>
+        </div>
+        <div class="cyber-progress-track" style="margin-top: 0.8rem;">
+          <div class="cyber-progress-fill" style="width: 78%;"></div>
+        </div>
+      </div>
+
+      <div class="glass-panel" style="background: rgba(4, 10, 24, 0.6); border-color: var(--border-purple);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+          <span class="font-mono text-purple" style="font-weight: 700;">NODE_BETA_04</span>
+          <span class="status-pill status-operational">NOMINAL</span>
+        </div>
+        <div class="font-tech" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Thermal Gradient Ingestion</div>
+        <div class="font-mono" style="font-size: 1.4rem; color: #fff;">
+          <span data-telemetry-osc data-base="5.8" data-variance="0.2" data-unit=" kHz">5.8 kHz</span>
+        </div>
+        <div class="cyber-progress-track" style="margin-top: 0.8rem;">
+          <div class="cyber-progress-fill" style="width: 62%; background: var(--purple);"></div>
+        </div>
+      </div>
+
+      <div class="glass-panel" style="background: rgba(4, 10, 24, 0.6); border-color: rgba(255, 183, 3, 0.4);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+          <span class="font-mono text-amber" style="font-weight: 700;">NODE_GAMMA_09</span>
+          <span class="status-pill status-warning">LATENCY SPIKE</span>
+        </div>
+        <div class="font-tech" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Acoustic Emission FFT</div>
+        <div class="font-mono" style="font-size: 1.4rem; color: #fff;">
+          <span data-telemetry-osc data-base="24.1" data-variance="1.2" data-unit=" kHz">24.1 kHz</span>
+        </div>
+        <div class="cyber-progress-track" style="margin-top: 0.8rem;">
+          <div class="cyber-progress-fill" style="width: 88%; background: var(--amber);"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Security Audit & Event Stream -->
+  <section class="glass-panel cyber-panel" id="security-audit" style="margin-bottom: 3rem;">
+    <h3 style="font-size: 1.3rem; color: #fff; margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.6rem;">
+      <span class="text-red">&#9670;</span> SYSTEM SECURITY & AUDIT TRAIL
+    </h3>
+    <div style="background: rgba(2, 6, 15, 0.8); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 1.25rem; font-family: var(--font-mono); font-size: 0.85rem;">
+      <div style="color: var(--cyan); margin-bottom: 0.6rem;">[<span class="cyber-clock"></span>] ROOT_AUTH: Operator session verified via SHA-256 session token.</div>
+      <div style="color: var(--text-muted); margin-bottom: 0.6rem;">[SYSTEM] CLUSTER_REBALANCE: Ingestion shard distribution balanced across 8 telemetry pods.</div>
+      <div style="color: var(--green); margin-bottom: 0.6rem;">[NEURAL_ENGINE] MODEL_EVAL: Wavelet FFT inference pass completed across 48 monitored rotators.</div>
+      <div style="color: var(--amber); margin-bottom: 0.6rem;">[DISPATCH] WATCHDOG: Predictive RUL threshold monitored for Extruder H-9. Warning broadcasted.</div>
+      <div style="color: var(--text-dim);">[NETWORK] TLS_CIPHER: All telemetry streams running TLS 1.3 with Ephemeral Diffie-Hellman keys.</div>
+    </div>
+  </section>
+</div>
+{% endblock %}
