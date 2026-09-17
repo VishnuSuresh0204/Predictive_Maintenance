@@ -1,0 +1,144 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}ORGANIZATION HUB // PREDICT-X Telemetry{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/futuristic.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="entity-org-body">
+  <!-- Futuristic Organization Top Navbar -->
+  <nav class="futuristic-navbar">
+    <div class="nav-container">
+      <a href="/org-home/" class="brand-wrapper">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">PREDICT<span class="text-cyan">-ORG</span></span>
+          <span class="brand-sub">
+            <span class="pulse-dot"></span>
+            INDUSTRIAL FLEET MONITOR
+          </span>
+        </div>
+      </a>
+
+      <!-- Telemetry status readout -->
+      <div class="nav-telemetry">
+        <div class="nav-telemetry-item">
+          <span class="text-cyan">FLEET LINK:</span>
+          <span class="text-green">SYNCHRONIZED</span>
+        </div>
+        <div class="nav-telemetry-item">
+          <span class="text-cyan">SYS_TIME:</span>
+          <span class="cyber-clock font-mono">--:--:-- UTC</span>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <ul class="nav-links">
+        <li><a href="/org-home/" class="nav-link active">Fleet Dashboard</a></li>
+        <li><a href="#equipment-section" class="nav-link">Machinery Matrix</a></li>
+        <li><a href="#telemetry-charts" class="nav-link">Sensor Telemetry</a></li>
+        <li><a href="#maintenance-schedule" class="nav-link">Schedules</a></li>
+        <li><span class="entity-badge badge-org">ORGANIZATION PORTAL</span></li>
+      </ul>
+
+      <!-- User Info & Logout -->
+      <div class="nav-actions">
+        <div class="stat-pill" style="padding: 0.35rem 0.85rem; border-color: rgba(0, 240, 255, 0.4);">
+          <span class="stat-pill-label" style="color: var(--cyan);">TENANT</span>
+          <span class="stat-pill-value" style="font-size: 0.85rem; color: #fff;">{{ request.user.username|default:"Facility Unit" }}</span>
+        </div>
+        <a href="/logout/" class="cyber-btn cyber-btn-cyan">Log Off</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Organization Sub-Header Banner -->
+  <header class="entity-header-banner">
+    <div class="entity-header-container">
+      <div class="entity-title-group">
+        <h1>
+          <span class="text-cyan">&#9670;</span>
+          {% block page_title %}ORGANIZATION TELEMETRY WORKSPACE{% endblock %}
+        </h1>
+        <p>{% block page_subtitle %}Real-time sensory telemetry, thermal diagnostics, and predictive failure warnings{% endblock %}</p>
+      </div>
+      <div class="entity-quick-stats">
+        <div class="stat-pill">
+          <span class="stat-pill-label">Facility MTBF</span>
+          <span class="stat-pill-value text-green" data-telemetry-osc data-base="1420" data-variance="5" data-unit=" hrs">1,420 hrs</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-pill-label">Fleet AI Failure Risk</span>
+          <span class="stat-pill-value text-green">1.2% (LOW)</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-pill-label">Active Sensors</span>
+          <span class="stat-pill-value text-cyan">48 Nodes</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Secondary Organization Navigation Tabs -->
+  <div class="secondary-nav">
+    <div class="secondary-nav-container">
+      <a href="/org-home/" class="sub-link active">&#9656; Fleet Summary</a>
+      <a href="#equipment-section" class="sub-link">&#9656; Monitored Machinery</a>
+      <a href="#telemetry-charts" class="sub-link">&#9656; Vibration & Thermal Curves</a>
+      <a href="#maintenance-schedule" class="sub-link">&#9656; Preventive Work Orders</a>
+      <a href="#anomaly-log" class="sub-link">&#9656; Edge Warnings</a>
+    </div>
+  </div>
+
+  <!-- Messages Alert Section -->
+  {% if messages %}
+  <div class="messages-container">
+    {% for message in messages %}
+    <div class="cyber-alert {% if message.tags == 'error' %}cyber-alert-error{% elif message.tags == 'success' %}cyber-alert-success{% else %}cyber-alert-info{% endif %}">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <span style="font-family: var(--font-display); font-size: 0.85rem; letter-spacing: 0.1em;">
+          [{% if message.tags %}{{ message.tags|upper }}{% else %}ALERT{% endif %}]
+        </span>
+        <span>{{ message }}</span>
+      </div>
+      <button type="button" class="cyber-alert-close" aria-label="Dismiss">&times;</button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Organization Main Content -->
+  <main class="main-wrapper">
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <!-- Organization Footer -->
+  <footer class="futuristic-footer">
+    <div class="footer-container">
+      <div class="footer-info">
+        <span class="text-cyan font-tech" style="font-weight: 700;">PREDICT-X // INDUSTRIAL TELEMETRY</span>
+        <span>Secure Plant Edge Gateway Link</span>
+        <span>Connected to Distributed Diagnostic Engine</span>
+      </div>
+      <div class="footer-telemetry">
+        <span class="pulse-dot"></span>
+        <span class="cyber-clock">--:--:-- UTC</span>
+        <span style="margin-left: 0.5rem; color: var(--text-dim);">| EDGE GATEWAY #04</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{% static 'js/futuristic.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
