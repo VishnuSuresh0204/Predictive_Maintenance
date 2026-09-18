@@ -7,55 +7,69 @@
 {% block page_subtitle %}Enterprise maintenance auditing across all tenant organization industrial fleets{% endblock %}
 
 {% block content %}
-<div class="container">
-  <!-- Summary Cards -->
-  <div class="grid-4" style="margin-bottom: 2rem;">
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-cyan" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">TOTAL WORK ORDERS</div>
-      <div class="font-display text-cyan" style="font-size: 2.2rem; font-weight: 800;">
-        {{ records.count|default:0 }}
-      </div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">Cross-tenant service records</div>
-    </div>
+<div class="container py-4">
 
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-amber" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">SCHEDULED</div>
-      <div class="font-display text-amber" style="font-size: 2.2rem; font-weight: 800;">
-        {{ scheduled_records.count|default:0 }}
+  <!-- Summary KPI Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+      <div class="glass-panel cyber-panel h-100">
+        <div class="font-tech text-cyan small fw-bold mb-2">
+          <i class="bi bi-journal-text me-1"></i> TOTAL WORK ORDERS
+        </div>
+        <div class="font-display text-cyan" style="font-size: 2.2rem; font-weight: 800;">
+          {{ records.count|default:0 }}
+        </div>
+        <div class="font-tech text-muted small mt-1">Cross-tenant service records</div>
       </div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">Planned upcoming overhauls</div>
     </div>
-
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-red" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">IN PROGRESS</div>
-      <div class="font-display text-red" style="font-size: 2.2rem; font-weight: 800;">
-        {{ in_progress_records.count|default:0 }}
+    <div class="col-6 col-lg-3">
+      <div class="glass-panel cyber-panel h-100">
+        <div class="font-tech text-warning small fw-bold mb-2">
+          <i class="bi bi-calendar-event me-1"></i> SCHEDULED
+        </div>
+        <div class="font-display text-warning" style="font-size: 2.2rem; font-weight: 800;">
+          {{ scheduled_records.count|default:0 }}
+        </div>
+        <div class="font-tech text-muted small mt-1">Planned upcoming overhauls</div>
       </div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">Active downtime servicing</div>
     </div>
-
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-green" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">COMPLETED</div>
-      <div class="font-display text-green" style="font-size: 2.2rem; font-weight: 800;">
-        {{ completed_records.count|default:0 }}
+    <div class="col-6 col-lg-3">
+      <div class="glass-panel cyber-panel h-100">
+        <div class="font-tech text-danger small fw-bold mb-2">
+          <i class="bi bi-hourglass-split me-1"></i> IN PROGRESS
+        </div>
+        <div class="font-display text-danger" style="font-size: 2.2rem; font-weight: 800;">
+          {{ in_progress_records.count|default:0 }}
+        </div>
+        <div class="font-tech text-muted small mt-1">Active downtime servicing</div>
       </div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">Restored & verified</div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="glass-panel cyber-panel h-100">
+        <div class="font-tech text-success small fw-bold mb-2">
+          <i class="bi bi-check2-circle me-1"></i> COMPLETED
+        </div>
+        <div class="font-display text-success" style="font-size: 2.2rem; font-weight: 800;">
+          {{ completed_records.count|default:0 }}
+        </div>
+        <div class="font-tech text-muted small mt-1">Restored &amp; verified</div>
+      </div>
     </div>
   </div>
 
-  <!-- Table -->
+  <!-- Global Maintenance Table -->
   <section class="glass-panel cyber-panel">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
       <div>
-        <h3 style="font-size: 1.4rem; color: #fff; display: flex; align-items: center; gap: 0.6rem;">
-          <span class="text-red">&#9658;</span> GLOBAL MAINTENANCE RECORDS
+        <h3 class="h5 text-white d-flex align-items-center gap-2 mb-1">
+          <i class="bi bi-tools text-danger"></i> GLOBAL MAINTENANCE RECORDS
         </h3>
-        <p class="font-tech text-muted" style="font-size: 0.88rem;">Complete servicing log audit trail</p>
+        <p class="font-tech text-muted small mb-0">Complete servicing log audit trail</p>
       </div>
     </div>
 
     <div class="table-responsive">
-      <table class="cyber-table">
+      <table class="table cyber-table table-hover align-middle">
         <thead>
           <tr>
             <th>WO #</th>
@@ -74,28 +88,22 @@
           {% for r in records %}
           <tr>
             <td class="font-mono text-cyan">#WO-{{ r.id }}</td>
-            <td class="font-tech" style="color: var(--cyan); font-weight: 700;">
-              {{ r.organization.organization_name }}
+            <td class="font-tech text-cyan fw-bold">{{ r.organization.organization_name }}</td>
+            <td class="fw-bold text-white">
+              <i class="bi bi-cpu me-1 text-cyan"></i>{{ r.machine.machine_name }}
             </td>
-            <td style="color: #fff; font-weight: 700;">
-              {{ r.machine.machine_name }}
-            </td>
-            <td>
-              <span class="font-tech text-cyan">{{ r.maintenance_type }}</span>
-            </td>
-            <td style="max-width: 280px; font-size: 0.88rem; color: var(--text-muted);">
+            <td><span class="font-tech text-cyan">{{ r.maintenance_type }}</span></td>
+            <td class="font-tech text-muted" style="max-width: 260px; font-size: 0.88rem;">
               {{ r.description }}
             </td>
-            <td class="font-tech" style="font-size: 0.88rem;">
-              {{ r.technician|default:"--" }}
-            </td>
+            <td class="font-tech" style="font-size: 0.88rem;">{{ r.technician|default:"--" }}</td>
             <td class="font-mono" style="font-size: 0.82rem; color: var(--text-dim);">
               {{ r.maintenance_date }}
             </td>
-            <td class="font-mono text-purple">
+            <td class="font-mono" style="color: var(--purple);">
               {% if r.downtime_hours %}{{ r.downtime_hours }} hrs{% else %}--{% endif %}
             </td>
-            <td class="font-mono text-green">
+            <td class="font-mono text-success">
               {% if r.cost %}${{ r.cost }}{% else %}--{% endif %}
             </td>
             <td>
@@ -110,9 +118,10 @@
           </tr>
           {% empty %}
           <tr>
-            <td colspan="10" style="text-align: center; padding: 3rem; color: var(--text-muted);">
-              <div class="font-tech text-cyan" style="font-size: 1.1rem; margin-bottom: 0.5rem;">NO MAINTENANCE RECORDS FOUND</div>
-              <span>No servicing logs have been created across any tenant.</span>
+            <td colspan="10" class="text-center py-5 text-muted">
+              <i class="bi bi-journal-x fs-2 d-block mb-2 text-cyan"></i>
+              <div class="font-tech text-cyan mb-1">NO MAINTENANCE RECORDS FOUND</div>
+              No servicing logs have been created across any tenant.
             </td>
           </tr>
           {% endfor %}
