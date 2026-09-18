@@ -1,66 +1,79 @@
 {% extends 'ORGANIZATION/base.html' %}
 {% load static %}
 
-{% block title %}MAINTENANCE LOGS & WORK ORDERS // PREDICT-X{% endblock %}
+{% block title %}MAINTENANCE LOGS &amp; WORK ORDERS // PREDICT-X{% endblock %}
 
-{% block page_title %}PLANT MAINTENANCE & SERVICE HISTORY{% endblock %}
-{% block page_subtitle %}Audit trail of preventive servicing, component overhauls, technician logs & downtime cost{% endblock %}
+{% block page_title %}PLANT MAINTENANCE &amp; SERVICE HISTORY{% endblock %}
+{% block page_subtitle %}Audit trail of preventive servicing, component overhauls, technician logs &amp; downtime cost{% endblock %}
 
 {% block content %}
-<div class="container">
-  <!-- Summary Metrics -->
-  <div class="grid-4" style="margin-bottom: 2rem;">
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-cyan" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">TOTAL RECORDS</div>
-      <div class="font-display text-cyan" style="font-size: 2.2rem; font-weight: 800;">
-        {{ total_records|default:0 }}
-      </div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">Work orders logged</div>
-    </div>
+<div class="container py-4">
 
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-amber" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">SCHEDULED / PENDING</div>
-      <div class="font-display text-amber" style="font-size: 2.2rem; font-weight: 800;">
-        {{ scheduled_count|default:0 }}
+  <!-- Summary KPI Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+      <div class="glass-panel cyber-panel h-100">
+        <div class="font-tech text-cyan small fw-bold mb-2">
+          <i class="bi bi-journal-text me-1"></i> TOTAL RECORDS
+        </div>
+        <div class="font-display text-cyan" style="font-size: 2.2rem; font-weight: 800;">
+          {{ total_records|default:0 }}
+        </div>
+        <div class="font-tech text-muted small mt-1">Work orders logged</div>
       </div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">Upcoming interventions</div>
     </div>
-
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-green" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">COMPLETED REPAIRS</div>
-      <div class="font-display text-green" style="font-size: 2.2rem; font-weight: 800;">
-        {{ completed_count|default:0 }}
+    <div class="col-6 col-lg-3">
+      <div class="glass-panel cyber-panel h-100">
+        <div class="font-tech text-warning small fw-bold mb-2">
+          <i class="bi bi-calendar-check me-1"></i> SCHEDULED / PENDING
+        </div>
+        <div class="font-display text-warning" style="font-size: 2.2rem; font-weight: 800;">
+          {{ scheduled_count|default:0 }}
+        </div>
+        <div class="font-tech text-muted small mt-1">Upcoming interventions</div>
       </div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">Restored to operation</div>
     </div>
-
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-purple" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">TOTAL DOWNTIME</div>
-      <div class="font-display text-purple" style="font-size: 2.2rem; font-weight: 800;">
-        {{ total_downtime|default:0 }} <span style="font-size: 1rem; font-weight: 400;">hrs</span>
+    <div class="col-6 col-lg-3">
+      <div class="glass-panel cyber-panel h-100">
+        <div class="font-tech text-success small fw-bold mb-2">
+          <i class="bi bi-check2-circle me-1"></i> COMPLETED REPAIRS
+        </div>
+        <div class="font-display text-success" style="font-size: 2.2rem; font-weight: 800;">
+          {{ completed_count|default:0 }}
+        </div>
+        <div class="font-tech text-muted small mt-1">Restored to operation</div>
       </div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">Total Servicing Cost: ${{ total_cost|default:0 }}</div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="glass-panel cyber-panel h-100">
+        <div class="font-tech small fw-bold mb-2" style="color: var(--purple);">
+          <i class="bi bi-clock-history me-1"></i> TOTAL DOWNTIME
+        </div>
+        <div class="font-display" style="font-size: 2.2rem; font-weight: 800; color: var(--purple);">
+          {{ total_downtime|default:0 }} <span class="fs-6 fw-normal">hrs</span>
+        </div>
+        <div class="font-tech text-muted small mt-1">Total Servicing Cost: ${{ total_cost|default:0 }}</div>
+      </div>
     </div>
   </div>
 
   <!-- Header Action Row -->
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
     <div>
-      <h3 style="font-size: 1.4rem; color: #fff; display: flex; align-items: center; gap: 0.6rem;">
-        <span class="text-cyan">&#9658;</span> MAINTENANCE DISPATCH LOGS
+      <h3 class="h5 text-white d-flex align-items-center gap-2 mb-1">
+        <i class="bi bi-tools text-cyan"></i> MAINTENANCE DISPATCH LOGS
       </h3>
-      <p class="font-tech text-muted" style="font-size: 0.88rem;">Filter and manage physical asset servicing records</p>
+      <p class="font-tech text-muted small mb-0">Filter and manage physical asset servicing records</p>
     </div>
     <a href="/add-maintenance/" class="cyber-btn cyber-btn-cyan">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-      + Create Work Order
+      <i class="bi bi-plus-lg me-1"></i> Create Work Order
     </a>
   </div>
 
-  <!-- Table Section -->
+  <!-- Table -->
   <section class="glass-panel cyber-panel">
     <div class="table-responsive">
-      <table class="cyber-table">
+      <table class="table cyber-table table-hover align-middle">
         <thead>
           <tr>
             <th>WO #</th>
@@ -72,22 +85,20 @@
             <th>DOWNTIME</th>
             <th>COST</th>
             <th>STATUS</th>
-            <th>UPDATE STATUS</th>
+            <th>UPDATE</th>
           </tr>
         </thead>
         <tbody>
           {% for r in records %}
           <tr>
             <td class="font-mono text-cyan">#WO-{{ r.id }}</td>
-            <td style="color: #fff; font-weight: 700;">
-              <a href="/machine/{{ r.machine.id }}/" style="color: #fff; text-decoration: none;">
-                {{ r.machine.machine_name }}
+            <td class="fw-bold text-white">
+              <a href="/machine/{{ r.machine.id }}/" class="text-white text-decoration-none">
+                <i class="bi bi-cpu me-1 text-cyan"></i>{{ r.machine.machine_name }}
               </a>
             </td>
-            <td>
-              <span class="font-tech text-cyan" style="font-weight: 600;">{{ r.maintenance_type }}</span>
-            </td>
-            <td style="max-width: 260px; font-size: 0.88rem; color: var(--text-muted);">
+            <td><span class="font-tech text-cyan fw-semibold">{{ r.maintenance_type }}</span></td>
+            <td class="font-tech text-muted" style="max-width: 240px; font-size: 0.88rem;">
               {{ r.description }}
             </td>
             <td class="font-tech" style="font-size: 0.88rem;">
@@ -96,10 +107,10 @@
             <td class="font-mono" style="font-size: 0.82rem; color: var(--text-dim);">
               {{ r.maintenance_date }}
             </td>
-            <td class="font-mono text-purple">
+            <td class="font-mono" style="color: var(--purple);">
               {% if r.downtime_hours %}{{ r.downtime_hours }} hrs{% else %}--{% endif %}
             </td>
-            <td class="font-mono text-green">
+            <td class="font-mono text-success">
               {% if r.cost %}${{ r.cost }}{% else %}--{% endif %}
             </td>
             <td>
@@ -112,9 +123,10 @@
               {% endif %}
             </td>
             <td>
-              <form method="POST" action="/update-maintenance-status/{{ r.id }}/" style="display: flex; gap: 0.3rem;">
+              <form method="POST" action="/update-maintenance-status/{{ r.id }}/">
                 {% csrf_token %}
-                <select name="status" class="cyber-input" style="padding: 0.25rem 0.5rem; font-size: 0.78rem; width: 110px;" onchange="this.form.submit()">
+                <select name="status" class="form-select cyber-input" style="padding: 0.25rem 0.5rem; font-size: 0.78rem; width: 120px;"
+                        onchange="this.form.submit()">
                   <option value="Scheduled" {% if r.status == "Scheduled" %}selected{% endif %}>Scheduled</option>
                   <option value="In Progress" {% if r.status == "In Progress" %}selected{% endif %}>In Progress</option>
                   <option value="Completed" {% if r.status == "Completed" %}selected{% endif %}>Completed</option>
@@ -124,9 +136,11 @@
           </tr>
           {% empty %}
           <tr>
-            <td colspan="10" style="text-align: center; padding: 3rem; color: var(--text-muted);">
-              <div class="font-tech text-cyan" style="font-size: 1.1rem; margin-bottom: 0.5rem;">NO MAINTENANCE RECORDS</div>
-              <span>No work orders have been logged yet. Click "+ Create Work Order" to dispatch one.</span>
+            <td colspan="10" class="text-center py-5">
+              <div class="font-tech text-cyan mb-2" style="font-size: 1.1rem;">
+                <i class="bi bi-journal-x me-2"></i> NO MAINTENANCE RECORDS
+              </div>
+              <span class="text-muted">No work orders have been logged yet. Click "Create Work Order" to dispatch one.</span>
             </td>
           </tr>
           {% endfor %}
