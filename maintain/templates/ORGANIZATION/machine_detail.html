@@ -6,83 +6,97 @@
 {% block page_subtitle %}Serial: {{ machine.serial_number }} &bull; Location: {{ machine.location|default:"Plant Floor" }} &bull; Age: {{ machine.age_in_years }} yrs{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container-fluid max-w-1400 py-4 px-3 px-lg-4">
   <!-- Asset Action & Status Header -->
-  <div class="glass-panel cyber-panel" style="margin-bottom: 2rem;">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
-      <div style="display: flex; align-items: center; gap: 1.5rem;">
-        <div class="brand-icon" style="width: 58px; height: 58px;">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+  <div class="glass-panel cyber-panel mb-4 p-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="brand-icon d-flex align-items-center justify-content-center" style="width: 58px; height: 58px;">
+          <i class="bi bi-cpu-fill text-cyan fs-2"></i>
         </div>
         <div>
-          <h2 style="font-size: 1.8rem; color: #fff;">{{ machine.machine_name }}</h2>
-          <p class="font-tech text-muted">
-            Manufacturer: <span class="text-cyan">{{ machine.manufacturer|default:"OEM General" }}</span> &bull;
-            Type: <span class="text-purple">{{ machine.machine_type.name|default:"Heavy Machine" }}</span> &bull;
-            Status: <span class="status-pill status-operational">{{ machine.status }}</span>
+          <h2 class="h3 text-light font-display mb-1">{{ machine.machine_name }}</h2>
+          <p class="font-tech text-muted mb-0 small">
+            Manufacturer: <span class="text-cyan fw-semibold">{{ machine.manufacturer|default:"OEM General" }}</span> &bull;
+            Type: <span class="text-purple fw-semibold">{{ machine.machine_type.name|default:"Heavy Machine" }}</span> &bull;
+            Status: <span class="status-pill status-operational ms-1">{{ machine.status }}</span>
           </p>
         </div>
       </div>
 
-      <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
+      <div class="d-flex gap-2 flex-wrap">
         <a href="/add-sensor-data/{{ machine.id }}/" class="cyber-btn cyber-btn-cyan">
-          + Ingest Sensor Data
+          <i class="bi bi-broadcast me-1"></i> + Ingest Sensor Data
         </a>
         <a href="/edit-machine/{{ machine.id }}/" class="cyber-btn cyber-btn-ghost">
-          Edit Configuration
+          <i class="bi bi-pencil me-1"></i> Edit Config
         </a>
-        <form action="/delete-machine/{{ machine.id }}/" method="POST" onsubmit="return confirm('Decommission machine {{ machine.machine_name }} and wipe sensory logs?');" style="display: inline;">
+        <form action="/delete-machine/{{ machine.id }}/" method="POST" onsubmit="return confirm('Decommission machine {{ machine.machine_name }} and wipe sensory logs?');" class="d-inline">
           {% csrf_token %}
-          <button type="submit" class="cyber-btn cyber-btn-red">Delete Asset</button>
+          <button type="submit" class="cyber-btn cyber-btn-red">
+            <i class="bi bi-trash me-1"></i> Delete Asset
+          </button>
         </form>
       </div>
     </div>
   </div>
 
   <!-- Averages Sensor KPI HUD -->
-  <div class="grid-4" style="margin-bottom: 2.5rem;">
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-cyan" style="font-size: 0.8rem; font-weight: 700;">AVG TEMPERATURE</div>
-      <div class="font-display" style="font-size: 1.9rem; color: #fff; margin-top: 0.3rem;">
-        {{ averages.avg_temperature|floatformat:1|default:"--" }}&deg;C
+  <div class="row g-4 mb-4">
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="glass-panel cyber-panel h-100 p-4">
+        <div class="font-tech text-cyan small fw-bold mb-1"><i class="bi bi-thermometer-half me-1"></i> AVG TEMPERATURE</div>
+        <div class="font-display display-6 text-light fw-bold mb-1">
+          {{ averages.avg_temperature|floatformat:1|default:"--" }}&deg;C
+        </div>
+        <div class="font-tech text-muted small">Stator thermal profile</div>
       </div>
-      <div class="font-tech text-muted" style="font-size: 0.75rem;">Stator thermal profile</div>
     </div>
 
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-purple" style="font-size: 0.8rem; font-weight: 700;">AVG VIBRATION</div>
-      <div class="font-display text-purple" style="font-size: 1.9rem; margin-top: 0.3rem;">
-        {{ averages.avg_vibration|floatformat:2|default:"--" }} mm/s
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="glass-panel cyber-panel h-100 p-4">
+        <div class="font-tech text-purple small fw-bold mb-1"><i class="bi bi-activity me-1"></i> AVG VIBRATION</div>
+        <div class="font-display display-6 text-purple fw-bold mb-1">
+          {{ averages.avg_vibration|floatformat:2|default:"--" }} <span class="fs-6 text-muted font-mono">mm/s</span>
+        </div>
+        <div class="font-tech text-muted small">Radial vibration RMS</div>
       </div>
-      <div class="font-tech text-muted" style="font-size: 0.75rem;">Radial vibration RMS</div>
     </div>
 
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-green" style="font-size: 0.8rem; font-weight: 700;">AVG SPEED</div>
-      <div class="font-display text-green" style="font-size: 1.9rem; margin-top: 0.3rem;">
-        {{ averages.avg_rotational_speed|floatformat:0|default:"--" }} RPM
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="glass-panel cyber-panel h-100 p-4">
+        <div class="font-tech text-green small fw-bold mb-1"><i class="bi bi-arrow-repeat me-1"></i> AVG SPEED</div>
+        <div class="font-display display-6 text-green fw-bold mb-1">
+          {{ averages.avg_rotational_speed|floatformat:0|default:"--" }} <span class="fs-6 text-muted font-mono">RPM</span>
+        </div>
+        <div class="font-tech text-muted small">Shaft rotation</div>
       </div>
-      <div class="font-tech text-muted" style="font-size: 0.75rem;">Shaft rotation</div>
     </div>
 
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-amber" style="font-size: 0.8rem; font-weight: 700;">AVG TORQUE</div>
-      <div class="font-display text-amber" style="font-size: 1.9rem; margin-top: 0.3rem;">
-        {{ averages.avg_torque|floatformat:1|default:"--" }} Nm
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="glass-panel cyber-panel h-100 p-4">
+        <div class="font-tech text-amber small fw-bold mb-1"><i class="bi bi-lightning-charge me-1"></i> AVG TORQUE</div>
+        <div class="font-display display-6 text-amber fw-bold mb-1">
+          {{ averages.avg_torque|floatformat:1|default:"--" }} <span class="fs-6 text-muted font-mono">Nm</span>
+        </div>
+        <div class="font-tech text-muted small">Mechanical shaft load</div>
       </div>
-      <div class="font-tech text-muted" style="font-size: 0.75rem;">Mechanical shaft load</div>
     </div>
   </div>
 
   <!-- Recent Sensor Readings Table -->
-  <div class="glass-panel cyber-panel" style="margin-bottom: 2.5rem;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-      <h3 style="font-size: 1.4rem; color: #fff;">RECENT SENSOR TELEMETRY LOGS</h3>
-      <a href="/add-sensor-data/{{ machine.id }}/" class="cyber-btn cyber-btn-cyan" style="font-size: 0.8rem; padding: 0.4rem 0.9rem;">+ Ingest Reading</a>
+  <div class="glass-panel cyber-panel mb-4 p-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+      <h3 class="h4 text-light font-display d-flex align-items-center gap-2 mb-0">
+        <i class="bi bi-list-columns-reverse text-cyan"></i> RECENT SENSOR TELEMETRY LOGS
+      </h3>
+      <a href="/add-sensor-data/{{ machine.id }}/" class="cyber-btn cyber-btn-cyan py-1 px-3 small">
+        <i class="bi bi-plus-lg me-1"></i> Ingest Reading
+      </a>
     </div>
 
     <div class="table-responsive">
-      <table class="cyber-table">
+      <table class="table table-dark table-hover align-middle mb-0 cyber-table">
         <thead>
           <tr>
             <th>RECORDED AT</th>
@@ -109,7 +123,7 @@
           </tr>
           {% empty %}
           <tr>
-            <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">
+            <td colspan="8" class="text-center py-4 text-muted">
               No telemetry readings logged for this machine yet.
             </td>
           </tr>
@@ -120,11 +134,13 @@
   </div>
 
   <!-- AI Prediction History for this Machine -->
-  <div class="glass-panel cyber-panel" style="margin-bottom: 2.5rem;">
-    <h3 style="font-size: 1.4rem; color: #fff; margin-bottom: 1.5rem;">AI FAILURE PREDICTIONS HISTORY</h3>
+  <div class="glass-panel cyber-panel mb-4 p-4">
+    <h3 class="h4 text-light font-display d-flex align-items-center gap-2 mb-4">
+      <i class="bi bi-graph-up text-purple"></i> AI FAILURE PREDICTIONS HISTORY
+    </h3>
 
     <div class="table-responsive">
-      <table class="cyber-table">
+      <table class="table table-dark table-hover align-middle mb-0 cyber-table">
         <thead>
           <tr>
             <th>DATE</th>
@@ -139,9 +155,9 @@
           {% for p in predictions %}
           <tr>
             <td class="font-mono text-cyan">{{ p.prediction_date|date:"Y-m-d H:i" }}</td>
-            <td class="font-mono" style="font-weight: 700;">
+            <td class="font-mono fw-bold">
               {% if p.risk_level == "High Risk" %}
-                <span class="text-red">{{ p.probability_percent }}%</span>
+                <span class="text-danger">{{ p.probability_percent }}%</span>
               {% elif p.risk_level == "Warning" %}
                 <span class="text-amber">{{ p.probability_percent }}%</span>
               {% else %}
@@ -150,22 +166,22 @@
             </td>
             <td>
               {% if p.risk_level == "High Risk" %}
-                <span class="status-pill status-critical">&#9888; {{ p.risk_level }}</span>
+                <span class="status-pill status-critical"><i class="bi bi-exclamation-triangle-fill me-1"></i> {{ p.risk_level }}</span>
               {% elif p.risk_level == "Warning" %}
-                <span class="status-pill status-warning">&#9650; {{ p.risk_level }}</span>
+                <span class="status-pill status-warning"><i class="bi bi-exclamation-circle-fill me-1"></i> {{ p.risk_level }}</span>
               {% else %}
-                <span class="status-pill status-operational">&#9679; {{ p.risk_level }}</span>
+                <span class="status-pill status-operational"><i class="bi bi-check-circle-fill me-1"></i> {{ p.risk_level }}</span>
               {% endif %}
             </td>
-            <td class="font-mono text-muted" style="font-size: 0.8rem;">{{ p.top_factors|default:"Nominal" }}</td>
+            <td class="font-mono text-muted small">{{ p.top_factors|default:"Nominal" }}</td>
             <td class="font-tech">{{ p.recommended_action|default:"Normal operating cycles." }}</td>
             <td>
-              <a href="/prediction/{{ p.id }}/" class="cyber-btn cyber-btn-ghost" style="padding: 0.3rem 0.7rem; font-size: 0.78rem;">Details</a>
+              <a href="/prediction/{{ p.id }}/" class="cyber-btn cyber-btn-ghost py-1 px-2 small">Details</a>
             </td>
           </tr>
           {% empty %}
           <tr>
-            <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">
+            <td colspan="6" class="text-center py-4 text-muted">
               No AI predictions evaluated for this asset yet.
             </td>
           </tr>
