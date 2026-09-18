@@ -5,7 +5,7 @@ from django.db.models import Avg, Count
 from django.utils import timezone
 
 from .models import *
-
+from .ml.predictor import predict_failure
 
 def get_current_org(request):
     """Helper to safely retrieve the logged in organization, or None."""
