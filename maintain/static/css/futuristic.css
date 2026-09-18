@@ -105,6 +105,83 @@ h4, h5, h6, .font-tech {
   text-transform: uppercase;
 }
 
+.max-w-1400 {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Bootstrap 5 Form & Card Overrides for Futuristic Theme */
+.form-control, .form-select {
+  background-color: rgba(5, 12, 26, 0.85) !important;
+  border: 1px solid var(--border-cyan) !important;
+  color: #ffffff !important;
+  font-family: var(--font-mono);
+  border-radius: 6px;
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: rgba(8, 18, 40, 0.95) !important;
+  border-color: var(--cyan) !important;
+  box-shadow: 0 0 15px var(--cyan-glow), inset 0 0 8px rgba(0, 240, 255, 0.2) !important;
+  color: #ffffff !important;
+}
+
+.form-control::placeholder {
+  color: var(--text-dim) !important;
+}
+
+.card {
+  background: var(--bg-card) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-cyan) !important;
+  border-radius: 12px;
+  color: var(--text-main);
+}
+
+.modal-content {
+  background: rgba(8, 16, 32, 0.95) !important;
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--border-cyan) !important;
+  color: var(--text-main);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.8), 0 0 25px var(--cyan-dim);
+}
+
+.nav-tabs .nav-link {
+  color: var(--text-muted);
+  font-family: var(--font-tech);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: 1px solid transparent;
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--cyan) !important;
+  background: rgba(0, 240, 255, 0.1) !important;
+  border-color: var(--border-cyan) var(--border-cyan) transparent var(--border-cyan) !important;
+}
+
+.table-dark {
+  --bs-table-bg: rgba(8, 16, 32, 0.65);
+  --bs-table-striped-bg: rgba(14, 28, 56, 0.5);
+  --bs-table-hover-bg: rgba(14, 28, 56, 0.9);
+  --bs-table-border-color: rgba(0, 240, 255, 0.2);
+  color: var(--text-main);
+  font-family: var(--font-tech);
+}
+
+.shadow-cyan {
+  box-shadow: 0 0 15px var(--cyan-glow);
+}
+
+.shadow-red {
+  box-shadow: 0 0 15px var(--red-glow);
+}
+
+.text-dim { color: var(--text-dim) !important; }
+
 .font-mono {
   font-family: var(--font-mono);
 }
