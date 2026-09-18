@@ -1,0 +1,124 @@
+{% extends 'ADMIN/base.html' %}
+{% load static %}
+
+{% block title %}GLOBAL MAINTENANCE LOGS // PREDICT-X Admin Console{% endblock %}
+
+{% block page_title %}GLOBAL MACHINERY MAINTENANCE CONSOLE{% endblock %}
+{% block page_subtitle %}Enterprise maintenance auditing across all tenant organization industrial fleets{% endblock %}
+
+{% block content %}
+<div class="container">
+  <!-- Summary Cards -->
+  <div class="grid-4" style="margin-bottom: 2rem;">
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-cyan" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">TOTAL WORK ORDERS</div>
+      <div class="font-display text-cyan" style="font-size: 2.2rem; font-weight: 800;">
+        {{ records.count|default:0 }}
+      </div>
+      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">Cross-tenant service records</div>
+    </div>
+
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-amber" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">SCHEDULED</div>
+      <div class="font-display text-amber" style="font-size: 2.2rem; font-weight: 800;">
+        {{ scheduled_records.count|default:0 }}
+      </div>
+      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">Planned upcoming overhauls</div>
+    </div>
+
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-red" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">IN PROGRESS</div>
+      <div class="font-display text-red" style="font-size: 2.2rem; font-weight: 800;">
+        {{ in_progress_records.count|default:0 }}
+      </div>
+      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">Active downtime servicing</div>
+    </div>
+
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-green" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">COMPLETED</div>
+      <div class="font-display text-green" style="font-size: 2.2rem; font-weight: 800;">
+        {{ completed_records.count|default:0 }}
+      </div>
+      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">Restored & verified</div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <section class="glass-panel cyber-panel">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h3 style="font-size: 1.4rem; color: #fff; display: flex; align-items: center; gap: 0.6rem;">
+          <span class="text-red">&#9658;</span> GLOBAL MAINTENANCE RECORDS
+        </h3>
+        <p class="font-tech text-muted" style="font-size: 0.88rem;">Complete servicing log audit trail</p>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="cyber-table">
+        <thead>
+          <tr>
+            <th>WO #</th>
+            <th>ORGANIZATION</th>
+            <th>MACHINE ASSET</th>
+            <th>MAINTENANCE TYPE</th>
+            <th>DESCRIPTION</th>
+            <th>TECHNICIAN</th>
+            <th>DATE</th>
+            <th>DOWNTIME</th>
+            <th>COST</th>
+            <th>STATUS</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in records %}
+          <tr>
+            <td class="font-mono text-cyan">#WO-{{ r.id }}</td>
+            <td class="font-tech" style="color: var(--cyan); font-weight: 700;">
+              {{ r.organization.organization_name }}
+            </td>
+            <td style="color: #fff; font-weight: 700;">
+              {{ r.machine.machine_name }}
+            </td>
+            <td>
+              <span class="font-tech text-cyan">{{ r.maintenance_type }}</span>
+            </td>
+            <td style="max-width: 280px; font-size: 0.88rem; color: var(--text-muted);">
+              {{ r.description }}
+            </td>
+            <td class="font-tech" style="font-size: 0.88rem;">
+              {{ r.technician|default:"--" }}
+            </td>
+            <td class="font-mono" style="font-size: 0.82rem; color: var(--text-dim);">
+              {{ r.maintenance_date }}
+            </td>
+            <td class="font-mono text-purple">
+              {% if r.downtime_hours %}{{ r.downtime_hours }} hrs{% else %}--{% endif %}
+            </td>
+            <td class="font-mono text-green">
+              {% if r.cost %}${{ r.cost }}{% else %}--{% endif %}
+            </td>
+            <td>
+              {% if r.status == "Completed" %}
+                <span class="status-pill status-operational">COMPLETED</span>
+              {% elif r.status == "In Progress" %}
+                <span class="status-pill status-warning">IN PROGRESS</span>
+              {% else %}
+                <span class="status-pill status-critical">SCHEDULED</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="10" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+              <div class="font-tech text-cyan" style="font-size: 1.1rem; margin-bottom: 0.5rem;">NO MAINTENANCE RECORDS FOUND</div>
+              <span>No servicing logs have been created across any tenant.</span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}
