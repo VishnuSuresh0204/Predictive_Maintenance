@@ -1,164 +1,103 @@
-
 {% extends 'ORGANIZATION/base.html' %}
 {% load static %}
 
 {% block title %}LOG SENSOR READINGS // PREDICT-X Telemetry{% endblock %}
 {% block page_title %}INGEST SENSOR TELEMETRY & RUN AI INFERENCE{% endblock %}
-{% block page_subtitle %}Submit machine sensor readings for AI-powered predictive maintenance{% endblock %}
+{% block page_subtitle %}Submit machine sensor readings for AI-powered predictive failure analysis{% endblock %}
 
 {% block content %}
-<div class="container" style="max-width: 880px;">
-  <div class="glass-panel cyber-panel" style="padding: 2.8rem;">
-
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1rem;">
+<div class="container py-4" style="max-width: 900px;">
+  <div class="glass-panel cyber-panel p-4 p-md-5">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 border-bottom border-subtle pb-3 mb-4">
       <div>
-        <h3 style="font-size: 1.5rem; color: #fff;">
-          SENSOR DATA INGESTION PIPELINE
+        <h3 class="h4 text-light font-display d-flex align-items-center gap-2 mb-1">
+          <i class="bi bi-broadcast-pin text-cyan"></i> SENSOR DATA INGESTION PIPELINE
         </h3>
-        <p class="font-tech text-cyan" style="font-size: 0.85rem;">
-          AI4I 2020 DATASET &bull; MACHINE FAILURE PREDICTION
-        </p>
+        <p class="font-tech text-cyan small mb-0">REAL-TIME AI FAILURE PREDICTION MODEL</p>
       </div>
       <span class="status-pill status-operational">
-        SENSOR INPUT READY
+        <i class="bi bi-check-circle-fill me-1"></i> SENSOR INPUT READY
       </span>
     </div>
 
     <form action="/add-sensor-data/" method="POST">
       {% csrf_token %}
 
-      <!-- MACHINE SELECTION -->
-      <div class="form-group">
-        <label for="machine_id" class="form-label">
-          &gt; TARGET MACHINERY ASSET
+      <!-- TARGET MACHINE SELECTION -->
+      <div class="mb-4">
+        <label for="machine_id" class="form-label font-tech text-cyan small fw-bold">
+          <i class="bi bi-cpu me-1"></i> TARGET MACHINERY ASSET *
         </label>
-
-        <select id="machine_id"
-                name="machine_id"
-                class="cyber-input"
-                required>
-
-          <option value="" disabled
-            {% if not selected_machine_id %}selected{% endif %}>
-            -- Select Target Machine --
+        <select id="machine_id" name="machine_id" class="form-select cyber-input" required>
+          <option value="" disabled {% if not selected_machine_id %}selected{% endif %}>
+            -- Select Target Machine Asset --
           </option>
-
           {% for m in machines %}
-          <option value="{{ m.id }}"
-            {% if selected_machine_id|stringformat:"s" == m.id|stringformat:"s" %}selected{% endif %}>
-            {{ m.machine_name }} ({{ m.serial_number }})
-            - Current Hours: {{ m.operating_hours }}
+          <option value="{{ m.id }}" {% if selected_machine_id|stringformat:"s" == m.id|stringformat:"s" %}selected{% endif %}>
+            {{ m.machine_name }} ({{ m.serial_number }}) - Current Operating Hours: {{ m.operating_hours }} hrs
           </option>
           {% endfor %}
-
         </select>
       </div>
 
-      <!-- TEMPERATURE INPUTS -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
-
-        <div class="form-group">
-          <label for="air_temperature" class="form-label">
-            &gt; AIR TEMPERATURE (K)
-          </label>
-
-          <input type="number"
-                 step="any"
-                 min="0"
-                 id="air_temperature"
-                 name="air_temperature"
-                 class="cyber-input"
-                 placeholder="e.g. 298.1"
-                 required>
+      <!-- SENSOR INPUT FIELDS -->
+      <div class="row g-3">
+        <div class="col-12 col-md-6">
+          <div class="mb-3">
+            <label for="temperature" class="form-label font-tech text-cyan small fw-bold">&gt; TEMPERATURE (&deg;C) *</label>
+            <input type="number" step="0.1" id="temperature" name="temperature" class="form-control cyber-input" placeholder="e.g. 68.5" required>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label for="process_temperature" class="form-label">
-            &gt; PROCESS TEMPERATURE (K)
-          </label>
-
-          <input type="number"
-                 step="any"
-                 min="0"
-                 id="process_temperature"
-                 name="process_temperature"
-                 class="cyber-input"
-                 placeholder="e.g. 308.6"
-                 required>
+        <div class="col-12 col-md-6">
+          <div class="mb-3">
+            <label for="vibration" class="form-label font-tech text-cyan small fw-bold">&gt; VIBRATION RMS (mm/s) *</label>
+            <input type="number" step="0.01" id="vibration" name="vibration" class="form-control cyber-input" placeholder="e.g. 2.45" required>
+          </div>
         </div>
 
+        <div class="col-12 col-md-6">
+          <div class="mb-3">
+            <label for="pressure" class="form-label font-tech text-cyan small fw-bold">&gt; FLUID / HYDRAULIC PRESSURE (bar) *</label>
+            <input type="number" step="0.1" id="pressure" name="pressure" class="form-control cyber-input" placeholder="e.g. 4.2" required>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="mb-3">
+            <label for="rotational_speed" class="form-label font-tech text-cyan small fw-bold">&gt; ROTATIONAL SPEED (RPM) *</label>
+            <input type="number" step="1" id="rotational_speed" name="rotational_speed" class="form-control cyber-input" placeholder="e.g. 1750" required>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="mb-3">
+            <label for="torque" class="form-label font-tech text-cyan small fw-bold">&gt; SHAFT TORQUE (Nm) *</label>
+            <input type="number" step="0.1" id="torque" name="torque" class="form-control cyber-input" placeholder="e.g. 48.2" required>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="mb-3">
+            <label for="power_consumption" class="form-label font-tech text-cyan small fw-bold">&gt; POWER CONSUMPTION (kW) *</label>
+            <input type="number" step="0.1" id="power_consumption" name="power_consumption" class="form-control cyber-input" placeholder="e.g. 15.8" required>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="mb-3">
+            <label for="operating_hours" class="form-label font-tech text-cyan small fw-bold">&gt; CURRENT MACHINE RUNNING HOURS *</label>
+            <input type="number" step="0.1" id="operating_hours" name="operating_hours" class="form-control cyber-input" placeholder="e.g. 1420.5" required>
+          </div>
+        </div>
       </div>
 
-      <!-- SPEED AND TORQUE -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
-
-        <div class="form-group">
-          <label for="rotational_speed" class="form-label">
-            &gt; ROTATIONAL SPEED (RPM)
-          </label>
-
-          <input type="number"
-                 step="any"
-                 min="0"
-                 id="rotational_speed"
-                 name="rotational_speed"
-                 class="cyber-input"
-                 placeholder="e.g. 1500"
-                 required>
-        </div>
-
-        <div class="form-group">
-          <label for="torque" class="form-label">
-            &gt; TORQUE (Nm)
-          </label>
-
-          <input type="number"
-                 step="any"
-                 min="0"
-                 id="torque"
-                 name="torque"
-                 class="cyber-input"
-                 placeholder="e.g. 40.5"
-                 required>
-        </div>
-
+      <!-- SUBMIT BUTTON -->
+      <div class="mt-4">
+        <button type="submit" class="cyber-btn cyber-btn-cyan cyber-btn-lg w-100">
+          <i class="bi bi-cpu me-2"></i> TRANSMIT TELEMETRY & EXECUTE AI PREDICTION
+        </button>
       </div>
-
-      <!-- TOOL WEAR -->
-      <div class="form-group">
-        <label for="tool_wear" class="form-label">
-          &gt; TOOL WEAR (MINUTES)
-        </label>
-
-        <input type="number"
-               step="any"
-               min="0"
-               id="tool_wear"
-               name="tool_wear"
-               class="cyber-input"
-               placeholder="e.g. 120"
-               required>
-      </div>
-
-      <!-- SUBMIT -->
-      <button type="submit"
-              class="cyber-btn cyber-btn-cyan cyber-btn-lg"
-              style="width: 100%; margin-top: 1rem;">
-
-        <svg width="20"
-             height="20"
-             viewBox="0 0 24 24"
-             fill="none"
-             stroke="currentColor"
-             stroke-width="2">
-          <circle cx="12" cy="12" r="10"></circle>
-          <polygon points="10 8 16 12 10 16 10 8"></polygon>
-        </svg>
-
-        TRANSMIT SENSOR DATA & RUN AI PREDICTION
-
-      </button>
-
     </form>
   </div>
 </div>
