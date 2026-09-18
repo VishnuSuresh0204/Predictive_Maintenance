@@ -1,0 +1,64 @@
+{% extends 'ORGANIZATION/base.html' %}
+{% load static %}
+
+{% block title %}FACILITY PROFILE // {{ org.organization_name }}{% endblock %}
+{% block page_title %}ORGANIZATION & PLANT PROFILE{% endblock %}
+{% block page_subtitle %}Enterprise credentials, emergency dispatch points, and physical facility coordinates{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 900px;">
+  <div class="glass-panel cyber-panel" style="padding: 2.8rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1rem;">
+      <div>
+        <h3 style="font-size: 1.5rem; color: #fff;">{{ org.organization_name }}</h3>
+        <p class="font-mono text-cyan" style="font-size: 0.85rem;">HANDLE: {{ org.login.username }} &bull; MONITORED ASSETS: {{ total_machines }}</p>
+      </div>
+      <span class="entity-badge badge-org">{{ org.industry_type }}</span>
+    </div>
+
+    <form action="/profile/" method="POST">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="organization_name" class="form-label">&gt; ORGANIZATION / FACILITY NAME</label>
+        <input type="text" id="organization_name" name="organization_name" class="cyber-input" value="{{ org.organization_name }}" required>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="form-group">
+          <label for="email" class="form-label">&gt; DISPATCH EMAIL</label>
+          <input type="email" id="email" name="email" class="cyber-input" value="{{ org.email }}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="phone" class="form-label">&gt; DISPATCH PHONE</label>
+          <input type="text" id="phone" name="phone" class="cyber-input" value="{{ org.phone }}" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="industry_type" class="form-label">&gt; INDUSTRY SECTOR</label>
+        <select id="industry_type" name="industry_type" class="cyber-input" required>
+          <option value="Aerospace & Defense" {% if org.industry_type == 'Aerospace & Defense' %}selected{% endif %}>Aerospace & Defense Propulsion</option>
+          <option value="Advanced Heavy Manufacturing" {% if org.industry_type == 'Advanced Heavy Manufacturing' %}selected{% endif %}>Advanced Heavy Manufacturing</option>
+          <option value="Energy, Oil & Power Utilities" {% if org.industry_type == 'Energy, Oil & Power Utilities' %}selected{% endif %}>Energy, Oil & Power Utilities</option>
+          <option value="Automotive & Robotics Assembly" {% if org.industry_type == 'Automotive & Robotics Assembly' %}selected{% endif %}>Automotive & Robotics Assembly</option>
+          <option value="Semiconductor Fabrication" {% if org.industry_type == 'Semiconductor Fabrication' %}selected{% endif %}>Semiconductor Cleanroom Fab</option>
+          <option value="Pharmaceutical & Biotech Synthesis" {% if org.industry_type == 'Pharmaceutical & Biotech Synthesis' %}selected{% endif %}>Pharmaceutical & Biotech Synthesis</option>
+          <option value="Maritime & Rail Logistics" {% if org.industry_type == 'Maritime & Rail Logistics' %}selected{% endif %}>Maritime & Heavy Rail Logistics</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="address" class="form-label">&gt; PLANT LOCATION / COORDINATES</label>
+        <textarea id="address" name="address" class="cyber-input" rows="3" required>{{ org.address }}</textarea>
+      </div>
+
+      <button type="submit" class="cyber-btn cyber-btn-cyan cyber-btn-lg" style="width: 100%; margin-top: 1rem;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+        UPDATE FACILITY TELEMETRY PROFILE
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}
