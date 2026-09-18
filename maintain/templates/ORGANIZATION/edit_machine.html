@@ -6,70 +6,80 @@
 {% block page_subtitle %}Update operating hours, location bay, and operating condition state{% endblock %}
 
 {% block content %}
-<div class="container" style="max-width: 850px;">
-  <div class="glass-panel cyber-panel" style="padding: 2.8rem;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+<div class="container py-4" style="max-width: 900px;">
+  <div class="glass-panel cyber-panel p-4 p-md-5">
+    <div class="d-flex justify-content-between align-items-center border-bottom border-cyan pb-3 mb-4">
       <div>
-        <h3 style="font-size: 1.5rem; color: #fff;">{{ machine.machine_name }}</h3>
-        <p class="font-mono text-cyan" style="font-size: 0.85rem;">SERIAL: {{ machine.serial_number }}</p>
+        <h3 class="h4 text-light font-display mb-1"><i class="bi bi-pencil-square text-cyan me-2"></i>{{ machine.machine_name }}</h3>
+        <p class="font-mono text-cyan small mb-0">SERIAL: {{ machine.serial_number }}</p>
       </div>
-      <a href="/machine/{{ machine.id }}/" class="cyber-btn cyber-btn-ghost">&larr; Back to Asset</a>
+      <a href="/machine/{{ machine.id }}/" class="cyber-btn cyber-btn-ghost">
+        <i class="bi bi-arrow-left me-1"></i> Back to Asset
+      </a>
     </div>
 
     <form action="/edit-machine/{{ machine.id }}/" method="POST">
       {% csrf_token %}
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-        <div class="form-group">
-          <label for="machine_name" class="form-label">&gt; MACHINE IDENTIFIER / NAME</label>
-          <input type="text" id="machine_name" name="machine_name" class="cyber-input" value="{{ machine.machine_name }}" required>
+      <div class="row g-3">
+        <div class="col-12 col-md-6">
+          <div class="mb-3">
+            <label for="machine_name" class="form-label font-tech text-cyan small fw-bold">&gt; MACHINE IDENTIFIER / NAME *</label>
+            <input type="text" id="machine_name" name="machine_name" class="form-control cyber-input" value="{{ machine.machine_name }}" required>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label for="machine_type_id" class="form-label">&gt; EQUIPMENT TYPE</label>
-          <select id="machine_type_id" name="machine_type_id" class="cyber-input">
-            <option value="">-- Select Type --</option>
-            {% for mt in machine_types %}
-            <option value="{{ mt.id }}" {% if machine.machine_type_id == mt.id %}selected{% endif %}>{{ mt.name }}</option>
-            {% endfor %}
-          </select>
+        <div class="col-12 col-md-6">
+          <div class="mb-3">
+            <label for="machine_type_id" class="form-label font-tech text-cyan small fw-bold">&gt; EQUIPMENT TYPE</label>
+            <select id="machine_type_id" name="machine_type_id" class="form-select cyber-input">
+              <option value="">-- Select Type --</option>
+              {% for mt in machine_types %}
+              <option value="{{ mt.id }}" {% if machine.machine_type_id == mt.id %}selected{% endif %}>{{ mt.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="mb-3">
+            <label for="manufacturer" class="form-label font-tech text-cyan small fw-bold">&gt; OEM MANUFACTURER</label>
+            <input type="text" id="manufacturer" name="manufacturer" class="form-control cyber-input" value="{{ machine.manufacturer }}">
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="mb-3">
+            <label for="location" class="form-label font-tech text-cyan small fw-bold">&gt; PLANT LOCATION / BAY</label>
+            <input type="text" id="location" name="location" class="form-control cyber-input" value="{{ machine.location }}">
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="mb-3">
+            <label for="operating_hours" class="form-label font-tech text-cyan small fw-bold">&gt; CUMULATIVE RUN HOURS *</label>
+            <input type="number" step="0.1" min="0" id="operating_hours" name="operating_hours" class="form-control cyber-input" value="{{ machine.operating_hours }}" required>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="mb-3">
+            <label for="status" class="form-label font-tech text-cyan small fw-bold">&gt; OPERATING CONDITION STATUS</label>
+            <select id="status" name="status" class="form-select cyber-input">
+              <option value="Operational" {% if machine.status == 'Operational' %}selected{% endif %}>Operational</option>
+              <option value="Under Maintenance" {% if machine.status == 'Under Maintenance' %}selected{% endif %}>Under Maintenance</option>
+              <option value="Stopped" {% if machine.status == 'Stopped' %}selected{% endif %}>Stopped</option>
+              <option value="Decommissioned" {% if machine.status == 'Decommissioned' %}selected{% endif %}>Decommissioned</option>
+            </select>
+          </div>
         </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-        <div class="form-group">
-          <label for="manufacturer" class="form-label">&gt; OEM MANUFACTURER</label>
-          <input type="text" id="manufacturer" name="manufacturer" class="cyber-input" value="{{ machine.manufacturer }}">
-        </div>
-
-        <div class="form-group">
-          <label for="location" class="form-label">&gt; PLANT LOCATION / BAY</label>
-          <input type="text" id="location" name="location" class="cyber-input" value="{{ machine.location }}">
-        </div>
-      </div>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-        <div class="form-group">
-          <label for="operating_hours" class="form-label">&gt; CUMULATIVE RUN HOURS</label>
-          <input type="number" step="0.1" min="0" id="operating_hours" name="operating_hours" class="cyber-input" value="{{ machine.operating_hours }}" required>
-        </div>
-
-        <div class="form-group">
-          <label for="status" class="form-label">&gt; OPERATING CONDITION STATUS</label>
-          <select id="status" name="status" class="cyber-input">
-            <option value="Operational" {% if machine.status == 'Operational' %}selected{% endif %}>Operational</option>
-            <option value="Under Maintenance" {% if machine.status == 'Under Maintenance' %}selected{% endif %}>Under Maintenance</option>
-            <option value="Stopped" {% if machine.status == 'Stopped' %}selected{% endif %}>Stopped</option>
-            <option value="Decommissioned" {% if machine.status == 'Decommissioned' %}selected{% endif %}>Decommissioned</option>
-          </select>
-        </div>
-      </div>
-
-      <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-        <button type="submit" class="cyber-btn cyber-btn-cyan cyber-btn-lg" style="flex: 1;">
-          SAVE CONFIGURATION CHANGES
-        </button>
+      <div class="d-flex gap-2 justify-content-end mt-4">
         <a href="/machine/{{ machine.id }}/" class="cyber-btn cyber-btn-ghost">Cancel</a>
+        <button type="submit" class="cyber-btn cyber-btn-cyan cyber-btn-lg">
+          <i class="bi bi-floppy me-1"></i> SAVE CONFIGURATION CHANGES
+        </button>
       </div>
     </form>
   </div>
