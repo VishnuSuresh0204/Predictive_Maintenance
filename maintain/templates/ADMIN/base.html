@@ -42,9 +42,11 @@
       <!-- Navigation Links -->
       <ul class="nav-links">
         <li><a href="/admin-home/" class="nav-link {% if request.path == '/admin-home/' %}active{% endif %}">Dashboard</a></li>
-        <li><a href="/admin-organizations/" class="nav-link {% if '/admin-organizations' in request.path %}active{% endif %}">Organizations</a></li>
+        <li><a href="/admin-organizations/" class="nav-link {% if '/admin-organizations' in request.path %}active{% endif %}">Tenants</a></li>
         <li><a href="/admin-machines/" class="nav-link {% if '/admin-machines' in request.path %}active{% endif %}">Machinery</a></li>
         <li><a href="/admin-predictions/" class="nav-link {% if '/admin-predictions' in request.path %}active{% endif %}">Predictions</a></li>
+        <li><a href="/admin-alerts/" class="nav-link {% if '/admin-alerts' in request.path %}active{% endif %}">Alerts</a></li>
+        <li><a href="/admin-maintenance/" class="nav-link {% if '/admin-maintenance' in request.path %}active{% endif %}">Maintenance</a></li>
         <li><a href="/admin-reports/" class="nav-link {% if '/admin-reports' in request.path %}active{% endif %}">Reports</a></li>
         <li><a href="/admin/" target="_blank" class="nav-link">Django Admin &nearr;</a></li>
         <li><span class="entity-badge badge-admin">ROOT CLEARANCE</span></li>
@@ -95,6 +97,8 @@
       <a href="/admin-organizations/" class="sub-link {% if '/admin-organizations' in request.path %}active{% endif %}">&#9672; Registered Tenants</a>
       <a href="/admin-machines/" class="sub-link {% if '/admin-machines' in request.path %}active{% endif %}">&#9672; Monitored Machinery</a>
       <a href="/admin-predictions/" class="sub-link {% if '/admin-predictions' in request.path %}active{% endif %}">&#9672; AI Predictions</a>
+      <a href="/admin-alerts/" class="sub-link {% if '/admin-alerts' in request.path %}active{% endif %}">&#9672; Global Alerts</a>
+      <a href="/admin-maintenance/" class="sub-link {% if '/admin-maintenance' in request.path %}active{% endif %}">&#9672; Global Maintenance</a>
       <a href="/admin-reports/" class="sub-link {% if '/admin-reports' in request.path %}active{% endif %}">&#9672; Analytics & Reports</a>
     </div>
   </div>
