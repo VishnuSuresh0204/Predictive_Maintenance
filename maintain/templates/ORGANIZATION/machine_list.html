@@ -6,43 +6,55 @@
 {% block page_subtitle %}Real-time sensory telemetry, operational status, and remaining useful life across assets{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container-fluid max-w-1400 py-4 px-3 px-lg-4">
   <!-- Status KPI Cards -->
-  <div class="grid-4">
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-cyan" style="font-size: 0.8rem; font-weight: 700;">TOTAL FLEET ASSETS</div>
-      <div class="font-display" style="font-size: 2.2rem; color: #fff; margin-top: 0.4rem;">{{ total_machines }}</div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem;">Monitored machines</div>
+  <div class="row g-4 mb-4">
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="glass-panel cyber-panel h-100 p-4">
+        <div class="font-tech text-cyan small fw-bold mb-1"><i class="bi bi-cpu-fill me-1"></i> TOTAL FLEET ASSETS</div>
+        <div class="font-display display-6 text-light fw-bold mb-1">{{ total_machines }}</div>
+        <div class="font-tech text-muted small">Monitored machines</div>
+      </div>
     </div>
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-green" style="font-size: 0.8rem; font-weight: 700;">OPERATIONAL</div>
-      <div class="font-display text-green" style="font-size: 2.2rem; margin-top: 0.4rem;">{{ operational_count }}</div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem;">Live digital twins active</div>
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="glass-panel cyber-panel h-100 p-4">
+        <div class="font-tech text-green small fw-bold mb-1"><i class="bi bi-check-circle-fill me-1"></i> OPERATIONAL</div>
+        <div class="font-display display-6 text-green fw-bold mb-1">{{ operational_count }}</div>
+        <div class="font-tech text-muted small">Live digital twins active</div>
+      </div>
     </div>
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-amber" style="font-size: 0.8rem; font-weight: 700;">UNDER MAINTENANCE</div>
-      <div class="font-display text-amber" style="font-size: 2.2rem; margin-top: 0.4rem;">{{ maintenance_count }}</div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem;">Work orders scheduled</div>
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="glass-panel cyber-panel h-100 p-4">
+        <div class="font-tech text-amber small fw-bold mb-1"><i class="bi bi-wrench-adjustable me-1"></i> UNDER MAINTENANCE</div>
+        <div class="font-display display-6 text-amber fw-bold mb-1">{{ maintenance_count }}</div>
+        <div class="font-tech text-muted small">Work orders scheduled</div>
+      </div>
     </div>
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-red" style="font-size: 0.8rem; font-weight: 700;">STOPPED</div>
-      <div class="font-display text-red" style="font-size: 2.2rem; margin-top: 0.4rem;">{{ stopped_count }}</div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem;">Inactive equipment</div>
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="glass-panel cyber-panel h-100 p-4">
+        <div class="font-tech text-red small fw-bold mb-1"><i class="bi bi-x-octagon-fill me-1"></i> STOPPED</div>
+        <div class="font-display display-6 text-red fw-bold mb-1">{{ stopped_count }}</div>
+        <div class="font-tech text-muted small">Inactive equipment</div>
+      </div>
     </div>
   </div>
 
-  <!-- Machine List Table -->
-  <div class="glass-panel cyber-panel" style="margin: 2.5rem 0;">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+  <!-- Machine List Table Card -->
+  <div class="glass-panel cyber-panel my-4 p-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
       <div>
-        <h3 style="font-size: 1.4rem; color: #fff;">REGISTERED MACHINES</h3>
-        <p class="font-tech text-muted">Complete telemetry feed for {{ org.organization_name }}</p>
+        <h3 class="h4 text-light font-display d-flex align-items-center gap-2 mb-1">
+          <i class="bi bi-gear-wide-connected text-cyan"></i> REGISTERED MACHINES
+        </h3>
+        <p class="font-tech text-muted mb-0 small">Complete telemetry feed for {{ org.organization_name }}</p>
       </div>
-      <a href="/add-machine/" class="cyber-btn cyber-btn-cyan">+ Register New Machine</a>
+      <a href="/add-machine/" class="cyber-btn cyber-btn-cyan">
+        <i class="bi bi-plus-lg me-1"></i> Register New Machine
+      </a>
     </div>
 
     <div class="table-responsive">
-      <table class="cyber-table">
+      <table class="table table-dark table-hover align-middle mb-0 cyber-table">
         <thead>
           <tr>
             <th>MACHINE NAME</th>
@@ -59,32 +71,32 @@
           {% for item in machine_data %}
           <tr>
             <td>
-              <a href="/machine/{{ item.machine.id }}/" style="color: #fff; font-weight: 700; text-decoration: none;" class="hover-cyan">
-                {{ item.machine.machine_name }}
+              <a href="/machine/{{ item.machine.id }}/" class="text-light fw-bold text-decoration-none d-flex align-items-center gap-2">
+                <i class="bi bi-cpu text-cyan"></i> {{ item.machine.machine_name }}
               </a>
-              <div class="font-tech text-muted" style="font-size: 0.75rem;">{{ item.machine.machine_type.name|default:"General Mechanical" }}</div>
+              <div class="font-tech text-muted small">{{ item.machine.machine_type.name|default:"General Mechanical" }}</div>
             </td>
             <td class="font-mono text-cyan">{{ item.machine.serial_number }}</td>
             <td class="font-tech">{{ item.machine.location|default:"Facility Floor" }}</td>
-            <td class="font-mono">{{ item.machine.operating_hours }} hrs</td>
+            <td class="font-mono text-purple">{{ item.machine.operating_hours }} hrs</td>
             <td>
               {% if item.latest_reading %}
-                <span class="font-mono text-cyan">{{ item.latest_reading.temperature }}&deg;C | {{ item.latest_reading.vibration }} mm/s</span>
+                <span class="font-mono text-cyan small"><i class="bi bi-thermometer-half me-1"></i>{{ item.latest_reading.temperature }}&deg;C | <i class="bi bi-activity me-1"></i>{{ item.latest_reading.vibration }} mm/s</span>
               {% else %}
-                <span class="text-muted font-tech">No Telemetry</span>
+                <span class="text-muted font-tech small">No Telemetry</span>
               {% endif %}
             </td>
             <td>
               {% if item.latest_prediction %}
                 {% if item.latest_prediction.risk_level == "High Risk" %}
-                  <span class="status-pill status-critical">&#9888; {{ item.latest_prediction.risk_level }} ({{ item.latest_prediction.probability_percent }}%)</span>
+                  <span class="status-pill status-critical"><i class="bi bi-exclamation-triangle-fill me-1"></i> High Risk ({{ item.latest_prediction.probability_percent }}%)</span>
                 {% elif item.latest_prediction.risk_level == "Warning" %}
-                  <span class="status-pill status-warning">&#9650; {{ item.latest_prediction.risk_level }} ({{ item.latest_prediction.probability_percent }}%)</span>
+                  <span class="status-pill status-warning"><i class="bi bi-exclamation-circle-fill me-1"></i> Warning ({{ item.latest_prediction.probability_percent }}%)</span>
                 {% else %}
-                  <span class="status-pill status-operational">&#9679; {{ item.latest_prediction.risk_level }} ({{ item.latest_prediction.probability_percent }}%)</span>
+                  <span class="status-pill status-operational"><i class="bi bi-check-circle-fill me-1"></i> Normal ({{ item.latest_prediction.probability_percent }}%)</span>
                 {% endif %}
               {% else %}
-                <span class="text-muted font-tech">No Prediction</span>
+                <span class="text-muted font-tech small">No Prediction</span>
               {% endif %}
             </td>
             <td>
@@ -97,16 +109,18 @@
               {% endif %}
             </td>
             <td>
-              <div style="display: flex; gap: 0.4rem;">
-                <a href="/machine/{{ item.machine.id }}/" class="cyber-btn cyber-btn-ghost" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">Inspect</a>
-                <a href="/add-sensor-data/{{ item.machine.id }}/" class="cyber-btn cyber-btn-cyan" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">+ Log Data</a>
+              <div class="d-flex gap-1">
+                <a href="/machine/{{ item.machine.id }}/" class="cyber-btn cyber-btn-ghost py-1 px-2 small">Inspect</a>
+                <a href="/add-sensor-data/{{ item.machine.id }}/" class="cyber-btn cyber-btn-cyan py-1 px-2 small">+ Log Data</a>
               </div>
             </td>
           </tr>
           {% empty %}
           <tr>
-            <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 3rem;">
-              No industrial machines registered yet. Click <a href="/add-machine/" class="text-cyan">+ Register New Machine</a> to provision your first asset.
+            <td colspan="8" class="text-center py-5 text-muted">
+              <i class="bi bi-cpu fs-1 text-cyan d-block mb-2"></i>
+              <span class="font-tech h6 text-cyan d-block">NO INDUSTRIAL MACHINES REGISTERED YET</span>
+              <span class="small">Click <a href="/add-machine/" class="text-cyan text-decoration-none fw-bold">+ Register New Machine</a> to provision your first asset.</span>
             </td>
           </tr>
           {% endfor %}
