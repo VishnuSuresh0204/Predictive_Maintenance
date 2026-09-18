@@ -1,0 +1,82 @@
+{% extends 'ORGANIZATION/base.html' %}
+{% load static %}
+
+{% block title %}LOG SENSOR READINGS // PREDICT-X Telemetry{% endblock %}
+{% block page_title %}INGEST SENSOR TELEMETRY & RUN AI INFERENCE{% endblock %}
+{% block page_subtitle %}Push real-time sensory transducers to the predictive failure neural network{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 880px;">
+  <div class="glass-panel cyber-panel" style="padding: 2.8rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1rem;">
+      <div>
+        <h3 style="font-size: 1.5rem; color: #fff;">SENSOR DATA INGESTION PIPELINE</h3>
+        <p class="font-tech text-cyan" style="font-size: 0.85rem;">EDGE TRANSDUCER &bull; FFT SPECTRAL INPUT</p>
+      </div>
+      <span class="status-pill status-operational">TRANSDUCERS READY</span>
+    </div>
+
+    <form action="/add-sensor-data/" method="POST">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="machine_id" class="form-label">&gt; TARGET MACHINERY ASSET</label>
+        <select id="machine_id" name="machine_id" class="cyber-input" required>
+          <option value="" disabled {% if not selected_machine_id %}selected{% endif %}>-- Select Target Machine --</option>
+          {% for m in machines %}
+          <option value="{{ m.id }}" {% if selected_machine_id|stringformat:"s" == m.id|stringformat:"s" %}selected{% endif %}>
+            {{ m.machine_name }} ({{ m.serial_number }}) - Current Hours: {{ m.operating_hours }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="form-group">
+          <label for="temperature" class="form-label">&gt; TEMPERATURE (&deg;C)</label>
+          <input type="number" step="0.1" min="0" id="temperature" name="temperature" class="cyber-input" placeholder="e.g. 68.5" required>
+        </div>
+
+        <div class="form-group">
+          <label for="vibration" class="form-label">&gt; VIBRATION RMS (mm/s)</label>
+          <input type="number" step="0.01" min="0" id="vibration" name="vibration" class="cyber-input" placeholder="e.g. 2.45" required>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="form-group">
+          <label for="pressure" class="form-label">&gt; HYDRAULIC/LINE PRESSURE (bar)</label>
+          <input type="number" step="0.1" min="0" id="pressure" name="pressure" class="cyber-input" placeholder="e.g. 4.8" required>
+        </div>
+
+        <div class="form-group">
+          <label for="rotational_speed" class="form-label">&gt; ROTATIONAL SPEED (RPM)</label>
+          <input type="number" step="1" min="0" id="rotational_speed" name="rotational_speed" class="cyber-input" placeholder="e.g. 1750" required>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="form-group">
+          <label for="torque" class="form-label">&gt; SHAFT TORQUE (Nm)</label>
+          <input type="number" step="0.1" min="0" id="torque" name="torque" class="cyber-input" placeholder="e.g. 48.2" required>
+        </div>
+
+        <div class="form-group">
+          <label for="power_consumption" class="form-label">&gt; POWER CONSUMPTION (kW)</label>
+          <input type="number" step="0.1" min="0" id="power_consumption" name="power_consumption" class="cyber-input" placeholder="e.g. 18.5" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="operating_hours" class="form-label">&gt; OPERATING HOURS AT RECORDING</label>
+        <input type="number" step="0.1" min="0" id="operating_hours" name="operating_hours" class="cyber-input" placeholder="e.g. 1200.0" required>
+      </div>
+
+      <button type="submit" class="cyber-btn cyber-btn-cyan cyber-btn-lg" style="width: 100%; margin-top: 1rem;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
+        TRANSMIT TELEMETRY & RUN AI PREDICTIVE INFERENCE
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}
