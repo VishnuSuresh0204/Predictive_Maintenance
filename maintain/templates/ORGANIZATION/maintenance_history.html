@@ -1,0 +1,138 @@
+{% extends 'ORGANIZATION/base.html' %}
+{% load static %}
+
+{% block title %}MAINTENANCE LOGS & WORK ORDERS // PREDICT-X{% endblock %}
+
+{% block page_title %}PLANT MAINTENANCE & SERVICE HISTORY{% endblock %}
+{% block page_subtitle %}Audit trail of preventive servicing, component overhauls, technician logs & downtime cost{% endblock %}
+
+{% block content %}
+<div class="container">
+  <!-- Summary Metrics -->
+  <div class="grid-4" style="margin-bottom: 2rem;">
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-cyan" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">TOTAL RECORDS</div>
+      <div class="font-display text-cyan" style="font-size: 2.2rem; font-weight: 800;">
+        {{ total_records|default:0 }}
+      </div>
+      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">Work orders logged</div>
+    </div>
+
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-amber" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">SCHEDULED / PENDING</div>
+      <div class="font-display text-amber" style="font-size: 2.2rem; font-weight: 800;">
+        {{ scheduled_count|default:0 }}
+      </div>
+      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">Upcoming interventions</div>
+    </div>
+
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-green" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">COMPLETED REPAIRS</div>
+      <div class="font-display text-green" style="font-size: 2.2rem; font-weight: 800;">
+        {{ completed_count|default:0 }}
+      </div>
+      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">Restored to operation</div>
+    </div>
+
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-purple" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">TOTAL DOWNTIME</div>
+      <div class="font-display text-purple" style="font-size: 2.2rem; font-weight: 800;">
+        {{ total_downtime|default:0 }} <span style="font-size: 1rem; font-weight: 400;">hrs</span>
+      </div>
+      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">Total Servicing Cost: ${{ total_cost|default:0 }}</div>
+    </div>
+  </div>
+
+  <!-- Header Action Row -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+    <div>
+      <h3 style="font-size: 1.4rem; color: #fff; display: flex; align-items: center; gap: 0.6rem;">
+        <span class="text-cyan">&#9658;</span> MAINTENANCE DISPATCH LOGS
+      </h3>
+      <p class="font-tech text-muted" style="font-size: 0.88rem;">Filter and manage physical asset servicing records</p>
+    </div>
+    <a href="/add-maintenance/" class="cyber-btn cyber-btn-cyan">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      + Create Work Order
+    </a>
+  </div>
+
+  <!-- Table Section -->
+  <section class="glass-panel cyber-panel">
+    <div class="table-responsive">
+      <table class="cyber-table">
+        <thead>
+          <tr>
+            <th>WO #</th>
+            <th>ASSET NAME</th>
+            <th>CATEGORY</th>
+            <th>DESCRIPTION</th>
+            <th>TECHNICIAN</th>
+            <th>DATE</th>
+            <th>DOWNTIME</th>
+            <th>COST</th>
+            <th>STATUS</th>
+            <th>UPDATE STATUS</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in records %}
+          <tr>
+            <td class="font-mono text-cyan">#WO-{{ r.id }}</td>
+            <td style="color: #fff; font-weight: 700;">
+              <a href="/machine/{{ r.machine.id }}/" style="color: #fff; text-decoration: none;">
+                {{ r.machine.machine_name }}
+              </a>
+            </td>
+            <td>
+              <span class="font-tech text-cyan" style="font-weight: 600;">{{ r.maintenance_type }}</span>
+            </td>
+            <td style="max-width: 260px; font-size: 0.88rem; color: var(--text-muted);">
+              {{ r.description }}
+            </td>
+            <td class="font-tech" style="font-size: 0.88rem;">
+              {{ r.technician|default:"Unassigned" }}
+            </td>
+            <td class="font-mono" style="font-size: 0.82rem; color: var(--text-dim);">
+              {{ r.maintenance_date }}
+            </td>
+            <td class="font-mono text-purple">
+              {% if r.downtime_hours %}{{ r.downtime_hours }} hrs{% else %}--{% endif %}
+            </td>
+            <td class="font-mono text-green">
+              {% if r.cost %}${{ r.cost }}{% else %}--{% endif %}
+            </td>
+            <td>
+              {% if r.status == "Completed" %}
+                <span class="status-pill status-operational">COMPLETED</span>
+              {% elif r.status == "In Progress" %}
+                <span class="status-pill status-warning">IN PROGRESS</span>
+              {% else %}
+                <span class="status-pill status-critical">SCHEDULED</span>
+              {% endif %}
+            </td>
+            <td>
+              <form method="POST" action="/update-maintenance-status/{{ r.id }}/" style="display: flex; gap: 0.3rem;">
+                {% csrf_token %}
+                <select name="status" class="cyber-input" style="padding: 0.25rem 0.5rem; font-size: 0.78rem; width: 110px;" onchange="this.form.submit()">
+                  <option value="Scheduled" {% if r.status == "Scheduled" %}selected{% endif %}>Scheduled</option>
+                  <option value="In Progress" {% if r.status == "In Progress" %}selected{% endif %}>In Progress</option>
+                  <option value="Completed" {% if r.status == "Completed" %}selected{% endif %}>Completed</option>
+                </select>
+              </form>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="10" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+              <div class="font-tech text-cyan" style="font-size: 1.1rem; margin-bottom: 0.5rem;">NO MAINTENANCE RECORDS</div>
+              <span>No work orders have been logged yet. Click "+ Create Work Order" to dispatch one.</span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}
