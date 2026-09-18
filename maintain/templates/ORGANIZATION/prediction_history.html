@@ -1,0 +1,115 @@
+{% extends 'ORGANIZATION/base.html' %}
+{% load static %}
+
+{% block title %}PREDICTION LOGS // {{ org.organization_name }}{% endblock %}
+{% block page_title %}PREDICTIVE FAILURE DIAGNOSTICS HISTORY{% endblock %}
+{% block page_subtitle %}Audit trail of machine health inferences, neural failure probabilities, and work orders{% endblock %}
+
+{% block content %}
+<div class="container">
+  <!-- Status KPI Cards -->
+  <div class="grid-4">
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-cyan" style="font-size: 0.8rem; font-weight: 700;">TOTAL PREDICTIONS</div>
+      <div class="font-display" style="font-size: 2.2rem; color: #fff; margin-top: 0.4rem;">{{ total_predictions }}</div>
+      <div class="font-tech text-muted" style="font-size: 0.8rem;">Evaluated neural runs</div>
+    </div>
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-green" style="font-size: 0.8rem; font-weight: 700;">NORMAL STATUS</div>
+      <div class="font-display text-green" style="font-size: 2.2rem; margin-top: 0.4rem;">{{ normal_count }}</div>
+      <div class="font-tech text-muted" style="font-size: 0.8rem;">Optimal parameters</div>
+    </div>
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-amber" style="font-size: 0.8rem; font-weight: 700;">WARNING LEVEL</div>
+      <div class="font-display text-amber" style="font-size: 2.2rem; margin-top: 0.4rem;">{{ warning_count }}</div>
+      <div class="font-tech text-muted" style="font-size: 0.8rem;">Elevated wear/vibration</div>
+    </div>
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-red" style="font-size: 0.8rem; font-weight: 700;">HIGH RISK ALERTS</div>
+      <div class="font-display text-red" style="font-size: 2.2rem; margin-top: 0.4rem;">{{ high_risk_count }}</div>
+      <div class="font-tech text-muted" style="font-size: 0.8rem;">Critical action required</div>
+    </div>
+  </div>
+
+  <!-- Filter & History Table -->
+  <div class="glass-panel cyber-panel" style="margin: 2.5rem 0;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+      <h3 style="font-size: 1.4rem; color: #fff;">PREDICTION LOGS</h3>
+
+      <!-- Filter by Machine -->
+      <form action="/prediction-history/" method="GET" style="display: flex; gap: 0.75rem; align-items: center;">
+        <select name="machine_id" class="cyber-input" style="padding: 0.45rem 1.8rem 0.45rem 0.8rem; font-size: 0.85rem;" onchange="this.form.submit()">
+          <option value="">-- All Machinery --</option>
+          {% for m in machines %}
+          <option value="{{ m.id }}" {% if selected_machine_id|stringformat:"s" == m.id|stringformat:"s" %}selected{% endif %}>
+            {{ m.machine_name }}
+          </option>
+          {% endfor %}
+        </select>
+        {% if selected_machine_id %}
+          <a href="/prediction-history/" class="cyber-btn cyber-btn-ghost" style="padding: 0.45rem 0.8rem; font-size: 0.8rem;">Reset</a>
+        {% endif %}
+      </form>
+    </div>
+
+    <div class="table-responsive">
+      <table class="cyber-table">
+        <thead>
+          <tr>
+            <th>TIMESTAMP</th>
+            <th>MACHINE</th>
+            <th>FAILURE PROBABILITY</th>
+            <th>RISK LEVEL</th>
+            <th>ATTRIBUTIONS</th>
+            <th>RECOMMENDED ACTION</th>
+            <th>INSPECT</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in predictions %}
+          <tr>
+            <td class="font-mono text-cyan" style="font-size: 0.82rem;">{{ p.prediction_date|date:"Y-m-d H:i" }}</td>
+            <td style="font-weight: 700; color: #fff;">
+              <a href="/machine/{{ p.machine.id }}/" style="color: #fff; text-decoration: none;">
+                {{ p.machine.machine_name }}
+              </a>
+            </td>
+            <td class="font-mono" style="font-weight: 700; font-size: 1.05rem;">
+              {% if p.risk_level == "High Risk" %}
+                <span class="text-red">{{ p.probability_percent }}%</span>
+              {% elif p.risk_level == "Warning" %}
+                <span class="text-amber">{{ p.probability_percent }}%</span>
+              {% else %}
+                <span class="text-green">{{ p.probability_percent }}%</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if p.risk_level == "High Risk" %}
+                <span class="status-pill status-critical">&#9888; HIGH RISK</span>
+              {% elif p.risk_level == "Warning" %}
+                <span class="status-pill status-warning">&#9650; WARNING</span>
+              {% else %}
+                <span class="status-pill status-operational">&#9679; NORMAL</span>
+              {% endif %}
+            </td>
+            <td class="font-mono text-muted" style="font-size: 0.78rem;">{{ p.top_factors|default:"Nominal" }}</td>
+            <td class="font-tech" style="font-size: 0.88rem;">{{ p.recommended_action|default:"Normal operating cycles." }}</td>
+            <td>
+              <a href="/prediction/{{ p.id }}/" class="cyber-btn cyber-btn-cyan" style="padding: 0.3rem 0.7rem; font-size: 0.75rem;">
+                Report &rarr;
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 3rem;">
+              No AI prediction records found. Click <a href="/add-sensor-data/" class="text-cyan">+ Ingest Sensor Data</a> to run predictive inference on your machinery.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
