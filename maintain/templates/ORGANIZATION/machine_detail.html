@@ -1,0 +1,178 @@
+{% extends 'ORGANIZATION/base.html' %}
+{% load static %}
+
+{% block title %}{{ machine.machine_name }} // PREDICT-X Asset{% endblock %}
+{% block page_title %}{{ machine.machine_name|upper }}{% endblock %}
+{% block page_subtitle %}Serial: {{ machine.serial_number }} &bull; Location: {{ machine.location|default:"Plant Floor" }} &bull; Age: {{ machine.age_in_years }} yrs{% endblock %}
+
+{% block content %}
+<div class="container">
+  <!-- Asset Action & Status Header -->
+  <div class="glass-panel cyber-panel" style="margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+      <div style="display: flex; align-items: center; gap: 1.5rem;">
+        <div class="brand-icon" style="width: 58px; height: 58px;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </div>
+        <div>
+          <h2 style="font-size: 1.8rem; color: #fff;">{{ machine.machine_name }}</h2>
+          <p class="font-tech text-muted">
+            Manufacturer: <span class="text-cyan">{{ machine.manufacturer|default:"OEM General" }}</span> &bull;
+            Type: <span class="text-purple">{{ machine.machine_type.name|default:"Heavy Machine" }}</span> &bull;
+            Status: <span class="status-pill status-operational">{{ machine.status }}</span>
+          </p>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
+        <a href="/add-sensor-data/{{ machine.id }}/" class="cyber-btn cyber-btn-cyan">
+          + Ingest Sensor Data
+        </a>
+        <a href="/edit-machine/{{ machine.id }}/" class="cyber-btn cyber-btn-ghost">
+          Edit Configuration
+        </a>
+        <form action="/delete-machine/{{ machine.id }}/" method="POST" onsubmit="return confirm('Decommission machine {{ machine.machine_name }} and wipe sensory logs?');" style="display: inline;">
+          {% csrf_token %}
+          <button type="submit" class="cyber-btn cyber-btn-red">Delete Asset</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Averages Sensor KPI HUD -->
+  <div class="grid-4" style="margin-bottom: 2.5rem;">
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-cyan" style="font-size: 0.8rem; font-weight: 700;">AVG TEMPERATURE</div>
+      <div class="font-display" style="font-size: 1.9rem; color: #fff; margin-top: 0.3rem;">
+        {{ averages.avg_temperature|floatformat:1|default:"--" }}&deg;C
+      </div>
+      <div class="font-tech text-muted" style="font-size: 0.75rem;">Stator thermal profile</div>
+    </div>
+
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-purple" style="font-size: 0.8rem; font-weight: 700;">AVG VIBRATION</div>
+      <div class="font-display text-purple" style="font-size: 1.9rem; margin-top: 0.3rem;">
+        {{ averages.avg_vibration|floatformat:2|default:"--" }} mm/s
+      </div>
+      <div class="font-tech text-muted" style="font-size: 0.75rem;">Radial vibration RMS</div>
+    </div>
+
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-green" style="font-size: 0.8rem; font-weight: 700;">AVG SPEED</div>
+      <div class="font-display text-green" style="font-size: 1.9rem; margin-top: 0.3rem;">
+        {{ averages.avg_rotational_speed|floatformat:0|default:"--" }} RPM
+      </div>
+      <div class="font-tech text-muted" style="font-size: 0.75rem;">Shaft rotation</div>
+    </div>
+
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-amber" style="font-size: 0.8rem; font-weight: 700;">AVG TORQUE</div>
+      <div class="font-display text-amber" style="font-size: 1.9rem; margin-top: 0.3rem;">
+        {{ averages.avg_torque|floatformat:1|default:"--" }} Nm
+      </div>
+      <div class="font-tech text-muted" style="font-size: 0.75rem;">Mechanical shaft load</div>
+    </div>
+  </div>
+
+  <!-- Recent Sensor Readings Table -->
+  <div class="glass-panel cyber-panel" style="margin-bottom: 2.5rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+      <h3 style="font-size: 1.4rem; color: #fff;">RECENT SENSOR TELEMETRY LOGS</h3>
+      <a href="/add-sensor-data/{{ machine.id }}/" class="cyber-btn cyber-btn-cyan" style="font-size: 0.8rem; padding: 0.4rem 0.9rem;">+ Ingest Reading</a>
+    </div>
+
+    <div class="table-responsive">
+      <table class="cyber-table">
+        <thead>
+          <tr>
+            <th>RECORDED AT</th>
+            <th>TEMP (&deg;C)</th>
+            <th>VIBRATION (mm/s)</th>
+            <th>PRESSURE (bar)</th>
+            <th>SPEED (RPM)</th>
+            <th>TORQUE (Nm)</th>
+            <th>POWER (kW)</th>
+            <th>OPERATING HRS</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in readings %}
+          <tr>
+            <td class="font-mono text-cyan">{{ r.recorded_at|date:"Y-m-d H:i" }}</td>
+            <td class="font-mono">{{ r.temperature }}</td>
+            <td class="font-mono">{{ r.vibration }}</td>
+            <td class="font-mono">{{ r.pressure }}</td>
+            <td class="font-mono">{{ r.rotational_speed }}</td>
+            <td class="font-mono">{{ r.torque }}</td>
+            <td class="font-mono">{{ r.power_consumption }}</td>
+            <td class="font-mono text-muted">{{ r.operating_hours }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">
+              No telemetry readings logged for this machine yet.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- AI Prediction History for this Machine -->
+  <div class="glass-panel cyber-panel" style="margin-bottom: 2.5rem;">
+    <h3 style="font-size: 1.4rem; color: #fff; margin-bottom: 1.5rem;">AI FAILURE PREDICTIONS HISTORY</h3>
+
+    <div class="table-responsive">
+      <table class="cyber-table">
+        <thead>
+          <tr>
+            <th>DATE</th>
+            <th>FAILURE PROBABILITY</th>
+            <th>RISK LEVEL</th>
+            <th>TOP ANOMALY FACTORS</th>
+            <th>RECOMMENDED WORK ACTION</th>
+            <th>VIEW</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in predictions %}
+          <tr>
+            <td class="font-mono text-cyan">{{ p.prediction_date|date:"Y-m-d H:i" }}</td>
+            <td class="font-mono" style="font-weight: 700;">
+              {% if p.risk_level == "High Risk" %}
+                <span class="text-red">{{ p.probability_percent }}%</span>
+              {% elif p.risk_level == "Warning" %}
+                <span class="text-amber">{{ p.probability_percent }}%</span>
+              {% else %}
+                <span class="text-green">{{ p.probability_percent }}%</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if p.risk_level == "High Risk" %}
+                <span class="status-pill status-critical">&#9888; {{ p.risk_level }}</span>
+              {% elif p.risk_level == "Warning" %}
+                <span class="status-pill status-warning">&#9650; {{ p.risk_level }}</span>
+              {% else %}
+                <span class="status-pill status-operational">&#9679; {{ p.risk_level }}</span>
+              {% endif %}
+            </td>
+            <td class="font-mono text-muted" style="font-size: 0.8rem;">{{ p.top_factors|default:"Nominal" }}</td>
+            <td class="font-tech">{{ p.recommended_action|default:"Normal operating cycles." }}</td>
+            <td>
+              <a href="/prediction/{{ p.id }}/" class="cyber-btn cyber-btn-ghost" style="padding: 0.3rem 0.7rem; font-size: 0.78rem;">Details</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">
+              No AI predictions evaluated for this asset yet.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
