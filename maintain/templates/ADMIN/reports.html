@@ -1,92 +1,132 @@
 {% extends 'ADMIN/base.html' %}
 {% load static %}
 
-{% block title %}AI ANALYTICS & REPORTS // PREDICT-X Admin{% endblock %}
-{% block page_title %}SYSTEM ANALYTICS & RELIABILITY REPORTS{% endblock %}
+{% block title %}AI ANALYTICS &amp; REPORTS // PREDICT-X Admin{% endblock %}
+{% block page_title %}SYSTEM ANALYTICS &amp; RELIABILITY REPORTS{% endblock %}
 {% block page_subtitle %}Predictive diagnostics intelligence, industry sector distributions, and failure rate models{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container py-4">
+
   <!-- Key Metrics -->
-  <div class="grid-4">
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-cyan" style="font-size: 0.8rem; font-weight: 700;">TOTAL INFERENCE RUNS</div>
-      <div class="font-display" style="font-size: 2.2rem; color: #fff; margin-top: 0.4rem;">{{ total_predictions }}</div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem;">Evaluated neural cycles</div>
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+      <div class="glass-panel cyber-panel h-100">
+        <div class="font-tech text-cyan small fw-bold mb-2">
+          <i class="bi bi-cpu me-1"></i> TOTAL INFERENCE RUNS
+        </div>
+        <div class="font-display text-white" style="font-size: 2.2rem; font-weight: 800;">{{ total_predictions }}</div>
+        <div class="font-tech text-muted small mt-1">Evaluated neural cycles</div>
+      </div>
     </div>
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-amber" style="font-size: 0.8rem; font-weight: 700;">OVERALL FAILURE RATE</div>
-      <div class="font-display text-amber" style="font-size: 2.2rem; margin-top: 0.4rem;">{{ overall_failure_rate }}%</div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem;">Ratio of high-risk anomalies</div>
+    <div class="col-6 col-lg-3">
+      <div class="glass-panel cyber-panel h-100">
+        <div class="font-tech text-warning small fw-bold mb-2">
+          <i class="bi bi-graph-up me-1"></i> OVERALL FAILURE RATE
+        </div>
+        <div class="font-display text-warning" style="font-size: 2.2rem; font-weight: 800;">{{ overall_failure_rate }}%</div>
+        <div class="font-tech text-muted small mt-1">Ratio of high-risk anomalies</div>
+      </div>
     </div>
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-purple" style="font-size: 0.8rem; font-weight: 700;">ACTIVE TENANTS</div>
-      <div class="font-display text-purple" style="font-size: 2.2rem; margin-top: 0.4rem;">{{ total_orgs }}</div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem;">Across global sectors</div>
+    <div class="col-6 col-lg-3">
+      <div class="glass-panel cyber-panel h-100">
+        <div class="font-tech small fw-bold mb-2" style="color: var(--purple);">
+          <i class="bi bi-buildings me-1"></i> ACTIVE TENANTS
+        </div>
+        <div class="font-display" style="font-size: 2.2rem; font-weight: 800; color: var(--purple);">{{ total_orgs }}</div>
+        <div class="font-tech text-muted small mt-1">Across global sectors</div>
+      </div>
     </div>
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-green" style="font-size: 0.8rem; font-weight: 700;">TOTAL MACHINERY</div>
-      <div class="font-display text-green" style="font-size: 2.2rem; margin-top: 0.4rem;">{{ total_machines }}</div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem;">Transducer connected</div>
+    <div class="col-6 col-lg-3">
+      <div class="glass-panel cyber-panel h-100">
+        <div class="font-tech text-success small fw-bold mb-2">
+          <i class="bi bi-hdd-stack me-1"></i> TOTAL MACHINERY
+        </div>
+        <div class="font-display text-success" style="font-size: 2.2rem; font-weight: 800;">{{ total_machines }}</div>
+        <div class="font-tech text-muted small mt-1">Transducer connected</div>
+      </div>
     </div>
   </div>
 
-  <div class="grid-3" style="margin: 2.5rem 0;">
+  <!-- Analytics panels row -->
+  <div class="row g-4">
+
     <!-- Risk Level Distribution -->
-    <div class="glass-panel cyber-panel">
-      <h4 style="font-size: 1.1rem; color: #fff; margin-bottom: 1.2rem;">RISK LEVEL DISTRIBUTION</h4>
-      {% for item in risk_stats %}
-      <div style="margin-bottom: 1.2rem;">
-        <div style="display: flex; justify-content: space-between; font-family: var(--font-tech); margin-bottom: 0.3rem;">
-          <span style="font-weight: 700; color: {% if item.risk_level == 'High Risk' %}var(--red){% elif item.risk_level == 'Warning' %}var(--amber){% else %}var(--green){% endif %};">
-            {{ item.risk_level }}
-          </span>
-          <span class="font-mono">{{ item.count }} instances</span>
+    <div class="col-12 col-lg-4">
+      <div class="glass-panel cyber-panel h-100">
+        <h4 class="h6 text-white d-flex align-items-center gap-2 mb-3">
+          <i class="bi bi-pie-chart text-cyan"></i> RISK LEVEL DISTRIBUTION
+        </h4>
+        {% for item in risk_stats %}
+        <div class="mb-3">
+          <div class="d-flex justify-content-between font-tech mb-1">
+            <span class="fw-bold"
+                  style="color: {% if item.risk_level == 'High Risk' %}var(--red){% elif item.risk_level == 'Warning' %}var(--amber){% else %}var(--green){% endif %};">
+              {{ item.risk_level }}
+            </span>
+            <span class="font-mono">{{ item.count }} instances</span>
+          </div>
+          <div class="cyber-progress-track">
+            <div class="cyber-progress-fill"
+                 style="width: {% widthratio item.count total_predictions 100 %}%;
+                        background: {% if item.risk_level == 'High Risk' %}var(--red){% elif item.risk_level == 'Warning' %}var(--amber){% else %}var(--green){% endif %};">
+            </div>
+          </div>
         </div>
-        <div class="cyber-progress-track">
-          <div class="cyber-progress-fill" style="width: {% widthratio item.count total_predictions 100 %}%; background: {% if item.risk_level == 'High Risk' %}var(--red){% elif item.risk_level == 'Warning' %}var(--amber){% else %}var(--green){% endif %};"></div>
-        </div>
+        {% empty %}
+        <div class="font-tech text-muted">No risk telemetry data available.</div>
+        {% endfor %}
       </div>
-      {% empty %}
-      <div class="text-muted font-tech">No risk telemetry data available.</div>
-      {% endfor %}
     </div>
 
     <!-- Equipment Category Breakdown -->
-    <div class="glass-panel cyber-panel">
-      <h4 style="font-size: 1.1rem; color: #fff; margin-bottom: 1.2rem;">BREAKDOWN BY MACHINE TYPE</h4>
-      {% for item in machine_type_stats %}
-      <div style="margin-bottom: 1.2rem;">
-        <div style="display: flex; justify-content: space-between; font-family: var(--font-tech); margin-bottom: 0.3rem;">
-          <span style="color: var(--cyan); font-weight: 700;">{{ item.machine__machine_type__name }}</span>
-          <span class="font-mono">{{ item.count }} predictions</span>
+    <div class="col-12 col-lg-4">
+      <div class="glass-panel cyber-panel h-100">
+        <h4 class="h6 text-white d-flex align-items-center gap-2 mb-3">
+          <i class="bi bi-bar-chart text-cyan"></i> BREAKDOWN BY MACHINE TYPE
+        </h4>
+        {% for item in machine_type_stats %}
+        <div class="mb-3">
+          <div class="d-flex justify-content-between font-tech mb-1">
+            <span class="text-cyan fw-bold">{{ item.machine__machine_type__name }}</span>
+            <span class="font-mono">{{ item.count }} predictions</span>
+          </div>
+          <div class="cyber-progress-track">
+            <div class="cyber-progress-fill"
+                 style="width: {% widthratio item.count total_predictions 100 %}%; background: var(--cyan);">
+            </div>
+          </div>
         </div>
-        <div class="cyber-progress-track">
-          <div class="cyber-progress-fill" style="width: {% widthratio item.count total_predictions 100 %}%; background: var(--cyan);"></div>
-        </div>
+        {% empty %}
+        <div class="font-tech text-muted">No machine types classified yet.</div>
+        {% endfor %}
       </div>
-      {% empty %}
-      <div class="text-muted font-tech">No machine types classified yet.</div>
-      {% endfor %}
     </div>
 
     <!-- Industry Sector Representation -->
-    <div class="glass-panel cyber-panel">
-      <h4 style="font-size: 1.1rem; color: #fff; margin-bottom: 1.2rem;">INDUSTRY SECTOR MATRIX</h4>
-      {% for item in industry_stats %}
-      <div style="margin-bottom: 1.2rem;">
-        <div style="display: flex; justify-content: space-between; font-family: var(--font-tech); margin-bottom: 0.3rem;">
-          <span style="color: var(--purple); font-weight: 700;">{{ item.industry_type }}</span>
-          <span class="font-mono">{{ item.count }} facilities</span>
+    <div class="col-12 col-lg-4">
+      <div class="glass-panel cyber-panel h-100">
+        <h4 class="h6 text-white d-flex align-items-center gap-2 mb-3">
+          <i class="bi bi-globe me-1" style="color: var(--purple);"></i> INDUSTRY SECTOR MATRIX
+        </h4>
+        {% for item in industry_stats %}
+        <div class="mb-3">
+          <div class="d-flex justify-content-between font-tech mb-1">
+            <span class="fw-bold" style="color: var(--purple);">{{ item.industry_type }}</span>
+            <span class="font-mono">{{ item.count }} facilities</span>
+          </div>
+          <div class="cyber-progress-track">
+            <div class="cyber-progress-fill"
+                 style="width: {% widthratio item.count total_orgs 100 %}%; background: var(--purple);">
+            </div>
+          </div>
         </div>
-        <div class="cyber-progress-track">
-          <div class="cyber-progress-fill" style="width: {% widthratio item.count total_orgs 100 %}%; background: var(--purple);"></div>
-        </div>
+        {% empty %}
+        <div class="font-tech text-muted">No organizations enrolled yet.</div>
+        {% endfor %}
       </div>
-      {% empty %}
-      <div class="text-muted font-tech">No organizations enrolled yet.</div>
-      {% endfor %}
     </div>
+
   </div>
 </div>
 {% endblock %}
