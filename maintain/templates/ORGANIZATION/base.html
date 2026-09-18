@@ -44,9 +44,11 @@
       <!-- Navigation Links -->
       <ul class="nav-links">
         <li><a href="/org-home/" class="nav-link {% if request.path == '/org-home/' %}active{% endif %}">Dashboard</a></li>
-        <li><a href="/machines/" class="nav-link {% if '/machine' in request.path %}active{% endif %}">Machinery Fleet</a></li>
+        <li><a href="/machines/" class="nav-link {% if '/machine' in request.path and not '/add-machine' in request.path and not '/edit-machine' in request.path %}active{% endif %}">Machinery Fleet</a></li>
         <li><a href="/add-sensor-data/" class="nav-link {% if '/add-sensor-data' in request.path %}active{% endif %}">Sensor Ingest</a></li>
         <li><a href="/prediction-history/" class="nav-link {% if '/prediction' in request.path %}active{% endif %}">Predictions</a></li>
+        <li><a href="/alerts/" class="nav-link {% if '/alerts' in request.path %}active{% endif %}">Alerts</a></li>
+        <li><a href="/maintenance-history/" class="nav-link {% if '/maintenance' in request.path or '/add-maintenance' in request.path %}active{% endif %}">Maintenance</a></li>
         <li><a href="/profile/" class="nav-link {% if '/profile' in request.path %}active{% endif %}">Profile</a></li>
         <li><span class="entity-badge badge-org">ENTERPRISE TENANT</span></li>
       </ul>
@@ -97,6 +99,8 @@
       <a href="/add-machine/" class="sub-link {% if request.path == '/add-machine/' %}active{% endif %}">&#9656; + Register Machine</a>
       <a href="/add-sensor-data/" class="sub-link {% if '/add-sensor-data' in request.path %}active{% endif %}">&#9656; + Ingest Sensor Data</a>
       <a href="/prediction-history/" class="sub-link {% if request.path == '/prediction-history/' %}active{% endif %}">&#9656; Predictive Logs</a>
+      <a href="/alerts/" class="sub-link {% if request.path == '/alerts/' %}active{% endif %}">&#9656; Risk Alerts</a>
+      <a href="/maintenance-history/" class="sub-link {% if '/maintenance' in request.path %}active{% endif %}">&#9656; Maintenance Logs</a>
       <a href="/profile/" class="sub-link {% if request.path == '/profile/' %}active{% endif %}">&#9656; Facility Profile</a>
     </div>
   </div>
