@@ -1,0 +1,71 @@
+{% extends 'ADMIN/base.html' %}
+{% load static %}
+
+{% block title %}REGISTERED TENANTS // PREDICT-X Admin{% endblock %}
+{% block page_title %}REGISTERED INDUSTRIAL ORGANIZATIONS{% endblock %}
+{% block page_subtitle %}Enterprise tenant management, telemetry telemetry provisioning & account controls{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="glass-panel cyber-panel" style="margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+      <div>
+        <h3 style="font-size: 1.4rem; color: #fff;">TENANT DIRECTORY ({{ total_count }})</h3>
+        <p class="font-tech text-muted">All verified industrial facilities and enterprise subscribers</p>
+      </div>
+      <a href="/register/" class="cyber-btn cyber-btn-cyan">+ Enroll New Tenant</a>
+    </div>
+
+    <div class="table-responsive">
+      <table class="cyber-table">
+        <thead>
+          <tr>
+            <th>ORGANIZATION</th>
+            <th>SECTOR</th>
+            <th>OPERATOR</th>
+            <th>CONTACT EMAIL</th>
+            <th>MACHINES</th>
+            <th>PREDICTIONS</th>
+            <th>HIGH RISK</th>
+            <th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in org_data %}
+          <tr>
+            <td>
+              <div style="font-weight: 700; color: #fff;">{{ item.org.organization_name }}</div>
+              <div class="font-mono text-cyan" style="font-size: 0.78rem;">#ORG-{{ item.org.id|stringformat:"03d" }}</div>
+            </td>
+            <td><span class="entity-badge badge-org">{{ item.org.industry_type }}</span></td>
+            <td class="font-mono text-purple">{{ item.org.login.username }}</td>
+            <td class="font-mono">{{ item.org.email }}</td>
+            <td class="font-mono text-cyan" style="font-weight: 700;">{{ item.machine_count }}</td>
+            <td class="font-mono">{{ item.prediction_count }}</td>
+            <td>
+              {% if item.high_risk_count > 0 %}
+                <span class="status-pill status-critical">{{ item.high_risk_count }} HIGH RISK</span>
+              {% else %}
+                <span class="status-pill status-operational">NOMINAL (0)</span>
+              {% endif %}
+            </td>
+            <td>
+              <form action="/admin-delete-org/{{ item.org.id }}/" method="POST" onsubmit="return confirm('Decommission tenant {{ item.org.organization_name }} and all sensory telemetry?');" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="cyber-btn cyber-btn-red" style="padding: 0.35rem 0.8rem; font-size: 0.75rem;">Decommission</button>
+              </form>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 3rem;">
+              No industrial organizations enrolled yet.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
