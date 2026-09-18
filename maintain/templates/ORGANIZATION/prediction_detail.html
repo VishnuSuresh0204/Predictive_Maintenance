@@ -6,112 +6,134 @@
 {% block page_subtitle %}Asset: {{ prediction.machine.machine_name }} &bull; Inferred: {{ prediction.prediction_date|date:"Y-m-d H:i:s" }} UTC{% endblock %}
 
 {% block content %}
-<div class="container" style="max-width: 960px;">
+<div class="container-fluid max-w-1400 py-4 px-3 px-lg-4" style="max-width: 1000px;">
   <!-- Main Result Panel -->
-  <div class="glass-panel cyber-panel" style="padding: 3rem; margin-bottom: 2.5rem; text-align: center;">
-    <div class="font-tech text-cyan" style="font-size: 0.9rem; font-weight: 700; letter-spacing: 0.15em; margin-bottom: 1rem;">
-      AI PREDICTIVE INFERENCE OUTPUT
+  <div class="glass-panel cyber-panel text-center p-4 p-md-5 mb-4">
+    <div class="font-tech text-cyan small fw-bold tracking-wider text-uppercase mb-2">
+      <i class="bi bi-cpu-fill me-1"></i> AI PREDICTIVE INFERENCE OUTPUT
     </div>
 
     <!-- Probability Gauge -->
-    <div style="margin: 1.5rem 0;">
-      <div class="font-display" style="font-size: 4rem; font-weight: 900; line-height: 1; color: {% if prediction.risk_level == 'High Risk' %}var(--red){% elif prediction.risk_level == 'Warning' %}var(--amber){% else %}var(--green){% endif %};">
+    <div class="my-3">
+      <div class="font-display display-2 fw-bold" style="color: {% if prediction.risk_level == 'High Risk' %}var(--red){% elif prediction.risk_level == 'Warning' %}var(--amber){% else %}var(--green){% endif %};">
         {{ prediction.probability_percent }}%
       </div>
-      <div class="font-tech" style="font-size: 1.1rem; color: var(--text-muted); margin-top: 0.5rem;">
+      <div class="font-tech text-muted fs-6 mt-1">
         ESTIMATED PROBABILITY OF SYSTEM FAILURE
       </div>
     </div>
 
-    <div style="display: inline-block; margin: 1rem 0;">
+    <div class="my-3">
       {% if prediction.risk_level == 'High Risk' %}
-        <span class="status-pill status-critical" style="font-size: 1.1rem; padding: 0.5rem 1.5rem;">
-          &#9888; CRITICAL FAILURE ANOMALY DETECTED
+        <span class="status-pill status-critical fs-6 px-4 py-2">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i> CRITICAL FAILURE ANOMALY DETECTED
         </span>
       {% elif prediction.risk_level == 'Warning' %}
-        <span class="status-pill status-warning" style="font-size: 1.1rem; padding: 0.5rem 1.5rem;">
-          &#9650; ELEVATED RISK &bull; PREVENTIVE ACTION REQUIRED
+        <span class="status-pill status-warning fs-6 px-4 py-2">
+          <i class="bi bi-exclamation-circle-fill me-2"></i> ELEVATED RISK &bull; PREVENTIVE ACTION REQUIRED
         </span>
       {% else %}
-        <span class="status-pill status-operational" style="font-size: 1.1rem; padding: 0.5rem 1.5rem;">
-          &#9679; NOMINAL CONDITION &bull; NORMAL OPERATIONS
+        <span class="status-pill status-operational fs-6 px-4 py-2">
+          <i class="bi bi-check-circle-fill me-2"></i> NOMINAL CONDITION &bull; NORMAL OPERATIONS
         </span>
       {% endif %}
     </div>
 
     <!-- Progress visual -->
-    <div class="cyber-progress-track" style="height: 12px; max-width: 600px; margin: 1.5rem auto;">
+    <div class="cyber-progress-track mx-auto my-4" style="height: 12px; max-width: 600px;">
       <div class="cyber-progress-fill" style="width: {{ prediction.probability_percent }}%; background: {% if prediction.risk_level == 'High Risk' %}var(--red){% elif prediction.risk_level == 'Warning' %}var(--amber){% else %}var(--green){% endif %};"></div>
     </div>
   </div>
 
-  <div class="grid-2" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem; margin-bottom: 2.5rem;">
+  <div class="row g-4 mb-4">
     <!-- Recommended Work Order Action -->
-    <div class="glass-panel cyber-panel">
-      <h4 style="font-size: 1.15rem; color: #fff; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-        <span class="text-cyan">&#9658;</span> RECOMMENDED WORK ACTION
-      </h4>
-      <div style="background: rgba(3, 8, 22, 0.8); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 1.4rem;">
-        <p class="font-tech" style="font-size: 1.05rem; line-height: 1.6; color: #f1f5f9;">
-          {{ prediction.recommended_action|default:"Normal operating cycles. No preventive maintenance scheduled at this time." }}
-        </p>
-      </div>
+    <div class="col-12 col-md-6">
+      <div class="glass-panel cyber-panel h-100 p-4">
+        <h4 class="h5 text-light font-display d-flex align-items-center gap-2 mb-3">
+          <i class="bi bi-clipboard-check-fill text-cyan"></i> RECOMMENDED WORK ACTION
+        </h4>
+        <div class="bg-dark border border-subtle rounded p-3 mb-3">
+          <p class="font-tech text-light mb-0" style="line-height: 1.6;">
+            {{ prediction.recommended_action|default:"Normal operating cycles. No preventive maintenance scheduled at this time." }}
+          </p>
+        </div>
 
-      <div style="margin-top: 1.5rem;">
-        <div class="font-tech text-cyan" style="font-size: 0.82rem; font-weight: 700; margin-bottom: 0.4rem;">KEY ANOMALY ATTRIBUTIONS</div>
-        <p class="font-mono text-muted" style="font-size: 0.88rem;">
-          {{ prediction.top_factors|default:"Sensory inputs aligned within nominal Gaussian variance." }}
-        </p>
+        <div>
+          <div class="font-tech text-cyan small fw-bold mb-1">KEY ANOMALY ATTRIBUTIONS</div>
+          <p class="font-mono text-muted small mb-0">
+            {{ prediction.top_factors|default:"Sensory inputs aligned within nominal Gaussian variance." }}
+          </p>
+        </div>
       </div>
     </div>
 
     <!-- Telemetry Snapshot at Evaluation -->
-    <div class="glass-panel cyber-panel">
-      <h4 style="font-size: 1.15rem; color: #fff; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-        <span class="text-purple">&#9658;</span> TRANSDUCER INPUT SNAPSHOT
-      </h4>
-      {% if prediction.sensor_data %}
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
-        <div class="stat-pill">
-          <span class="stat-pill-label">Temperature</span>
-          <span class="stat-pill-value">{{ prediction.sensor_data.temperature }}&deg;C</span>
+    <div class="col-12 col-md-6">
+      <div class="glass-panel cyber-panel h-100 p-4">
+        <h4 class="h5 text-light font-display d-flex align-items-center gap-2 mb-3">
+          <i class="bi bi-activity text-purple"></i> TRANSDUCER INPUT SNAPSHOT
+        </h4>
+        {% if prediction.sensor_data %}
+        <div class="row g-2">
+          <div class="col-6">
+            <div class="stat-pill p-2 border border-subtle rounded bg-dark">
+              <span class="stat-pill-label text-dim small">Temperature</span>
+              <span class="stat-pill-value">{{ prediction.sensor_data.temperature }}&deg;C</span>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="stat-pill p-2 border border-subtle rounded bg-dark">
+              <span class="stat-pill-label text-dim small">Vibration RMS</span>
+              <span class="stat-pill-value text-purple">{{ prediction.sensor_data.vibration }} mm/s</span>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="stat-pill p-2 border border-subtle rounded bg-dark">
+              <span class="stat-pill-label text-dim small">Pressure</span>
+              <span class="stat-pill-value">{{ prediction.sensor_data.pressure }} bar</span>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="stat-pill p-2 border border-subtle rounded bg-dark">
+              <span class="stat-pill-label text-dim small">Rotational Speed</span>
+              <span class="stat-pill-value">{{ prediction.sensor_data.rotational_speed }} RPM</span>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="stat-pill p-2 border border-subtle rounded bg-dark">
+              <span class="stat-pill-label text-dim small">Torque</span>
+              <span class="stat-pill-value">{{ prediction.sensor_data.torque }} Nm</span>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="stat-pill p-2 border border-subtle rounded bg-dark">
+              <span class="stat-pill-label text-dim small">Power</span>
+              <span class="stat-pill-value">{{ prediction.sensor_data.power_consumption }} kW</span>
+            </div>
+          </div>
         </div>
-        <div class="stat-pill">
-          <span class="stat-pill-label">Vibration RMS</span>
-          <span class="stat-pill-value text-purple">{{ prediction.sensor_data.vibration }} mm/s</span>
-        </div>
-        <div class="stat-pill">
-          <span class="stat-pill-label">Pressure</span>
-          <span class="stat-pill-value">{{ prediction.sensor_data.pressure }} bar</span>
-        </div>
-        <div class="stat-pill">
-          <span class="stat-pill-label">Rotational Speed</span>
-          <span class="stat-pill-value">{{ prediction.sensor_data.rotational_speed }} RPM</span>
-        </div>
-        <div class="stat-pill">
-          <span class="stat-pill-label">Torque</span>
-          <span class="stat-pill-value">{{ prediction.sensor_data.torque }} Nm</span>
-        </div>
-        <div class="stat-pill">
-          <span class="stat-pill-label">Power Consumption</span>
-          <span class="stat-pill-value">{{ prediction.sensor_data.power_consumption }} kW</span>
-        </div>
-      </div>
-      {% else %}
-      <div class="text-muted font-tech">No direct sensor telemetry snapshot linked.</div>
-      {% endif %}
+        {% else %}
+        <div class="text-muted font-tech">No direct sensor telemetry snapshot linked.</div>
+        {% endif %}
 
-      <div style="margin-top: 1.2rem; display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);">
-        <span>MODEL: {{ prediction.model_version|default:"Wavelet-FFT-v2" }}</span>
-        <span>LATENCY: {{ prediction.processing_time_ms|default:"18" }}ms</span>
+        <div class="d-flex justify-content-between font-mono small text-dim mt-3 pt-2 border-top border-subtle">
+          <span>MODEL: {{ prediction.model_version|default:"Wavelet-FFT-v2" }}</span>
+          <span>LATENCY: {{ prediction.processing_time_ms|default:"18" }}ms</span>
+        </div>
       </div>
     </div>
   </div>
 
-  <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 3rem;">
-    <a href="/machine/{{ prediction.machine.id }}/" class="cyber-btn cyber-btn-ghost">&larr; Return to Machine</a>
-    <a href="/add-sensor-data/{{ prediction.machine.id }}/" class="cyber-btn cyber-btn-cyan">+ Ingest Another Reading</a>
-    <a href="/prediction-history/" class="cyber-btn cyber-btn-purple">View Prediction History &rarr;</a>
+  <div class="d-flex justify-content-center gap-2 flex-wrap mb-4">
+    <a href="/machine/{{ prediction.machine.id }}/" class="cyber-btn cyber-btn-ghost">
+      <i class="bi bi-arrow-left me-1"></i> Return to Machine
+    </a>
+    <a href="/add-sensor-data/{{ prediction.machine.id }}/" class="cyber-btn cyber-btn-cyan">
+      <i class="bi bi-plus-lg me-1"></i> Ingest Another Reading
+    </a>
+    <a href="/prediction-history/" class="cyber-btn cyber-btn-purple">
+      View Prediction History <i class="bi bi-arrow-right ms-1"></i>
+    </a>
   </div>
 </div>
 {% endblock %}
