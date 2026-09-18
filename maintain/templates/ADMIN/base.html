@@ -41,10 +41,13 @@
 
       <!-- Navigation Links -->
       <ul class="nav-links">
-        <li><a href="/admin-home/" class="nav-link active">Dashboard</a></li>
-        <li><a href="#organizations-section" class="nav-link">Organizations</a></li>
-        <li><a href="#telemetry-section" class="nav-link">Fleet Ingest</a></li>
-        <li><span class="entity-badge badge-admin">ROOT PRIVILEGES</span></li>
+        <li><a href="/admin-home/" class="nav-link {% if request.path == '/admin-home/' %}active{% endif %}">Dashboard</a></li>
+        <li><a href="/admin-organizations/" class="nav-link {% if '/admin-organizations' in request.path %}active{% endif %}">Organizations</a></li>
+        <li><a href="/admin-machines/" class="nav-link {% if '/admin-machines' in request.path %}active{% endif %}">Machinery</a></li>
+        <li><a href="/admin-predictions/" class="nav-link {% if '/admin-predictions' in request.path %}active{% endif %}">Predictions</a></li>
+        <li><a href="/admin-reports/" class="nav-link {% if '/admin-reports' in request.path %}active{% endif %}">Reports</a></li>
+        <li><a href="/admin/" target="_blank" class="nav-link">Django Admin &nearr;</a></li>
+        <li><span class="entity-badge badge-admin">ROOT CLEARANCE</span></li>
       </ul>
 
       <!-- User Info & Logout -->
@@ -88,11 +91,11 @@
   <!-- Secondary Admin Navigation Tabs -->
   <div class="secondary-nav">
     <div class="secondary-nav-container">
-      <a href="/admin-home/" class="sub-link active">&#9672; Cluster Overview</a>
-      <a href="#organizations-section" class="sub-link">&#9672; Registered Tenants</a>
-      <a href="#telemetry-section" class="sub-link">&#9672; Sensor Telemetry Nodes</a>
-      <a href="#anomaly-alerts" class="sub-link">&#9672; Anomaly Incidents</a>
-      <a href="#security-audit" class="sub-link">&#9672; Audit & Security</a>
+      <a href="/admin-home/" class="sub-link {% if request.path == '/admin-home/' %}active{% endif %}">&#9672; Cluster Overview</a>
+      <a href="/admin-organizations/" class="sub-link {% if '/admin-organizations' in request.path %}active{% endif %}">&#9672; Registered Tenants</a>
+      <a href="/admin-machines/" class="sub-link {% if '/admin-machines' in request.path %}active{% endif %}">&#9672; Monitored Machinery</a>
+      <a href="/admin-predictions/" class="sub-link {% if '/admin-predictions' in request.path %}active{% endif %}">&#9672; AI Predictions</a>
+      <a href="/admin-reports/" class="sub-link {% if '/admin-reports' in request.path %}active{% endif %}">&#9672; Analytics & Reports</a>
     </div>
   </div>
 
