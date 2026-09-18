@@ -1,0 +1,113 @@
+{% extends 'ADMIN/base.html' %}
+{% load static %}
+
+{% block title %}MONITORED MACHINERY // PREDICT-X Admin{% endblock %}
+{% block page_title %}GLOBAL MACHINERY & ASSET INVENTORY{% endblock %}
+{% block page_subtitle %}Cross-tenant equipment fleet, operational status, and real-time telemetry health{% endblock %}
+
+{% block content %}
+<div class="container">
+  <!-- Status KPI Cards -->
+  <div class="grid-4">
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-cyan" style="font-size: 0.8rem; font-weight: 700;">TOTAL FLEET ASSETS</div>
+      <div class="font-display" style="font-size: 2.2rem; color: #fff; margin-top: 0.4rem;">{{ total_machines }}</div>
+      <div class="font-tech text-muted" style="font-size: 0.8rem;">Monitored across all tenants</div>
+    </div>
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-green" style="font-size: 0.8rem; font-weight: 700;">OPERATIONAL UNITS</div>
+      <div class="font-display text-green" style="font-size: 2.2rem; margin-top: 0.4rem;">{{ operational_count }}</div>
+      <div class="font-tech text-muted" style="font-size: 0.8rem;">Live digital twins syncing</div>
+    </div>
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-amber" style="font-size: 0.8rem; font-weight: 700;">MAINTENANCE ACTIVE</div>
+      <div class="font-display text-amber" style="font-size: 2.2rem; margin-top: 0.4rem;">{{ maintenance_count }}</div>
+      <div class="font-tech text-muted" style="font-size: 0.8rem;">Work orders in progress</div>
+    </div>
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-red" style="font-size: 0.8rem; font-weight: 700;">STOPPED / OFFLINE</div>
+      <div class="font-display text-red" style="font-size: 2.2rem; margin-top: 0.4rem;">{{ stopped_count }}</div>
+      <div class="font-tech text-muted" style="font-size: 0.8rem;">No sensor stream detected</div>
+    </div>
+  </div>
+
+  <!-- Machines Table -->
+  <div class="glass-panel cyber-panel" style="margin: 2.5rem 0;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+      <div>
+        <h3 style="font-size: 1.4rem; color: #fff;">EQUIPMENT ASSET MATRIX</h3>
+        <p class="font-tech text-muted">Complete telemetry feed for all enrolled industrial machinery</p>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="cyber-table">
+        <thead>
+          <tr>
+            <th>MACHINE NAME</th>
+            <th>ORGANIZATION</th>
+            <th>SERIAL / TYPE</th>
+            <th>OPERATING HOURS</th>
+            <th>LATEST READING</th>
+            <th>LATEST AI RISK</th>
+            <th>STATUS</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in machine_data %}
+          <tr>
+            <td>
+              <div style="font-weight: 700; color: #fff;">{{ item.machine.machine_name }}</div>
+              <div class="font-mono text-cyan" style="font-size: 0.78rem;">Location: {{ item.machine.location|default:"Central Facility" }}</div>
+            </td>
+            <td>
+              <span class="entity-badge badge-org">{{ item.machine.organization.organization_name }}</span>
+            </td>
+            <td>
+              <div class="font-mono text-purple">{{ item.machine.serial_number }}</div>
+              <div class="font-tech text-muted" style="font-size: 0.75rem;">{{ item.machine.machine_type.name|default:"General Rotator" }}</div>
+            </td>
+            <td class="font-mono">{{ item.machine.operating_hours }} hrs</td>
+            <td>
+              {% if item.latest_reading %}
+                <span class="font-mono text-cyan">{{ item.latest_reading.temperature }}&deg;C | {{ item.latest_reading.vibration }} mm/s</span>
+              {% else %}
+                <span class="text-muted font-tech">No Telemetry</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if item.latest_prediction %}
+                {% if item.latest_prediction.risk_level == "High Risk" %}
+                  <span class="status-pill status-critical">&#9888; HIGH ({{ item.latest_prediction.probability_percent }}%)</span>
+                {% elif item.latest_prediction.risk_level == "Warning" %}
+                  <span class="status-pill status-warning">&#9650; WARN ({{ item.latest_prediction.probability_percent }}%)</span>
+                {% else %}
+                  <span class="status-pill status-operational">&#9679; NORMAL ({{ item.latest_prediction.probability_percent }}%)</span>
+                {% endif %}
+              {% else %}
+                <span class="text-muted font-tech">Untested</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if item.machine.status == "Operational" %}
+                <span class="status-pill status-operational">{{ item.machine.status }}</span>
+              {% elif item.machine.status == "Under Maintenance" %}
+                <span class="status-pill status-warning">{{ item.machine.status }}</span>
+              {% else %}
+                <span class="status-pill status-critical">{{ item.machine.status }}</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 3rem;">
+              No industrial machines registered across organizations.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
