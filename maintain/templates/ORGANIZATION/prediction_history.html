@@ -6,40 +6,50 @@
 {% block page_subtitle %}Audit trail of machine health inferences, neural failure probabilities, and work orders{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container-fluid max-w-1400 py-4 px-3 px-lg-4">
   <!-- Status KPI Cards -->
-  <div class="grid-4">
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-cyan" style="font-size: 0.8rem; font-weight: 700;">TOTAL PREDICTIONS</div>
-      <div class="font-display" style="font-size: 2.2rem; color: #fff; margin-top: 0.4rem;">{{ total_predictions }}</div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem;">Evaluated neural runs</div>
+  <div class="row g-4 mb-4">
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="glass-panel cyber-panel h-100 p-4">
+        <div class="font-tech text-cyan small fw-bold mb-1"><i class="bi bi-graph-up me-1"></i> TOTAL PREDICTIONS</div>
+        <div class="font-display display-6 text-light fw-bold mb-1">{{ total_predictions }}</div>
+        <div class="font-tech text-muted small">Evaluated neural runs</div>
+      </div>
     </div>
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-green" style="font-size: 0.8rem; font-weight: 700;">NORMAL STATUS</div>
-      <div class="font-display text-green" style="font-size: 2.2rem; margin-top: 0.4rem;">{{ normal_count }}</div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem;">Optimal parameters</div>
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="glass-panel cyber-panel h-100 p-4">
+        <div class="font-tech text-green small fw-bold mb-1"><i class="bi bi-check-circle-fill me-1"></i> NORMAL STATUS</div>
+        <div class="font-display display-6 text-green fw-bold mb-1">{{ normal_count }}</div>
+        <div class="font-tech text-muted small">Optimal parameters</div>
+      </div>
     </div>
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-amber" style="font-size: 0.8rem; font-weight: 700;">WARNING LEVEL</div>
-      <div class="font-display text-amber" style="font-size: 2.2rem; margin-top: 0.4rem;">{{ warning_count }}</div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem;">Elevated wear/vibration</div>
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="glass-panel cyber-panel h-100 p-4">
+        <div class="font-tech text-amber small fw-bold mb-1"><i class="bi bi-exclamation-circle-fill me-1"></i> WARNING LEVEL</div>
+        <div class="font-display display-6 text-amber fw-bold mb-1">{{ warning_count }}</div>
+        <div class="font-tech text-muted small">Elevated wear/vibration</div>
+      </div>
     </div>
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-red" style="font-size: 0.8rem; font-weight: 700;">HIGH RISK ALERTS</div>
-      <div class="font-display text-red" style="font-size: 2.2rem; margin-top: 0.4rem;">{{ high_risk_count }}</div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem;">Critical action required</div>
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="glass-panel cyber-panel h-100 p-4">
+        <div class="font-tech text-red small fw-bold mb-1"><i class="bi bi-exclamation-triangle-fill me-1"></i> HIGH RISK ALERTS</div>
+        <div class="font-display display-6 text-red fw-bold mb-1">{{ high_risk_count }}</div>
+        <div class="font-tech text-muted small">Critical action required</div>
+      </div>
     </div>
   </div>
 
-  <!-- Filter & History Table -->
-  <div class="glass-panel cyber-panel" style="margin: 2.5rem 0;">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
-      <h3 style="font-size: 1.4rem; color: #fff;">PREDICTION LOGS</h3>
+  <!-- Filter & History Table Card -->
+  <div class="glass-panel cyber-panel my-4 p-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+      <h3 class="h4 text-light font-display d-flex align-items-center gap-2 mb-0">
+        <i class="bi bi-clock-history text-cyan"></i> PREDICTION LOGS
+      </h3>
 
       <!-- Filter by Machine -->
-      <form action="/prediction-history/" method="GET" style="display: flex; gap: 0.75rem; align-items: center;">
-        <select name="machine_id" class="cyber-input" style="padding: 0.45rem 1.8rem 0.45rem 0.8rem; font-size: 0.85rem;" onchange="this.form.submit()">
-          <option value="">-- All Machinery --</option>
+      <form action="/prediction-history/" method="GET" class="d-flex gap-2 align-items-center">
+        <select name="machine_id" class="form-select cyber-input py-1 px-3 small" onchange="this.form.submit()">
+          <option value="">-- Filter by Machine --</option>
           {% for m in machines %}
           <option value="{{ m.id }}" {% if selected_machine_id|stringformat:"s" == m.id|stringformat:"s" %}selected{% endif %}>
             {{ m.machine_name }}
@@ -47,13 +57,13 @@
           {% endfor %}
         </select>
         {% if selected_machine_id %}
-          <a href="/prediction-history/" class="cyber-btn cyber-btn-ghost" style="padding: 0.45rem 0.8rem; font-size: 0.8rem;">Reset</a>
+          <a href="/prediction-history/" class="cyber-btn cyber-btn-ghost py-1 px-3 small">Reset</a>
         {% endif %}
       </form>
     </div>
 
     <div class="table-responsive">
-      <table class="cyber-table">
+      <table class="table table-dark table-hover align-middle mb-0 cyber-table">
         <thead>
           <tr>
             <th>TIMESTAMP</th>
@@ -68,15 +78,15 @@
         <tbody>
           {% for p in predictions %}
           <tr>
-            <td class="font-mono text-cyan" style="font-size: 0.82rem;">{{ p.prediction_date|date:"Y-m-d H:i" }}</td>
-            <td style="font-weight: 700; color: #fff;">
-              <a href="/machine/{{ p.machine.id }}/" style="color: #fff; text-decoration: none;">
-                {{ p.machine.machine_name }}
+            <td class="font-mono text-cyan small">{{ p.prediction_date|date:"Y-m-d H:i" }}</td>
+            <td class="fw-bold text-light">
+              <a href="/machine/{{ p.machine.id }}/" class="text-light text-decoration-none d-flex align-items-center gap-1">
+                <i class="bi bi-cpu text-cyan"></i> {{ p.machine.machine_name }}
               </a>
             </td>
-            <td class="font-mono" style="font-weight: 700; font-size: 1.05rem;">
+            <td class="font-mono fw-bold fs-5">
               {% if p.risk_level == "High Risk" %}
-                <span class="text-red">{{ p.probability_percent }}%</span>
+                <span class="text-danger">{{ p.probability_percent }}%</span>
               {% elif p.risk_level == "Warning" %}
                 <span class="text-amber">{{ p.probability_percent }}%</span>
               {% else %}
@@ -85,25 +95,27 @@
             </td>
             <td>
               {% if p.risk_level == "High Risk" %}
-                <span class="status-pill status-critical">&#9888; HIGH RISK</span>
+                <span class="status-pill status-critical"><i class="bi bi-exclamation-triangle-fill me-1"></i> HIGH RISK</span>
               {% elif p.risk_level == "Warning" %}
-                <span class="status-pill status-warning">&#9650; WARNING</span>
+                <span class="status-pill status-warning"><i class="bi bi-exclamation-circle-fill me-1"></i> WARNING</span>
               {% else %}
-                <span class="status-pill status-operational">&#9679; NORMAL</span>
+                <span class="status-pill status-operational"><i class="bi bi-check-circle-fill me-1"></i> NORMAL</span>
               {% endif %}
             </td>
-            <td class="font-mono text-muted" style="font-size: 0.78rem;">{{ p.top_factors|default:"Nominal" }}</td>
-            <td class="font-tech" style="font-size: 0.88rem;">{{ p.recommended_action|default:"Normal operating cycles." }}</td>
+            <td class="font-mono text-muted small">{{ p.top_factors|default:"Nominal" }}</td>
+            <td class="font-tech small">{{ p.recommended_action|default:"Normal operating cycles." }}</td>
             <td>
-              <a href="/prediction/{{ p.id }}/" class="cyber-btn cyber-btn-cyan" style="padding: 0.3rem 0.7rem; font-size: 0.75rem;">
-                Report &rarr;
+              <a href="/prediction/{{ p.id }}/" class="cyber-btn cyber-btn-cyan py-1 px-2 small">
+                Report <i class="bi bi-arrow-right ms-1"></i>
               </a>
             </td>
           </tr>
           {% empty %}
           <tr>
-            <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 3rem;">
-              No AI prediction records found. Click <a href="/add-sensor-data/" class="text-cyan">+ Ingest Sensor Data</a> to run predictive inference on your machinery.
+            <td colspan="7" class="text-center py-5 text-muted">
+              <i class="bi bi-graph-up fs-1 text-cyan d-block mb-2"></i>
+              <span class="font-tech h6 text-cyan d-block">NO PREDICTION RECORDS FOUND</span>
+              <span class="small">Click <a href="/add-sensor-data/" class="text-cyan text-decoration-none fw-bold">+ Ingest Sensor Data</a> to run predictive inference on your machinery.</span>
             </td>
           </tr>
           {% endfor %}
