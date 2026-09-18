@@ -25,6 +25,12 @@ urlpatterns = [
     path('add-sensor-data/<int:machine_id>/', views.add_sensor_data),
     path('prediction/<int:prediction_id>/', views.prediction_detail),
     path('prediction-history/', views.prediction_history),
+    path('alerts/', views.alerts_view),
+
+    # Maintenance Management
+    path('add-maintenance/', views.add_maintenance),
+    path('maintenance-history/', views.maintenance_history),
+    path('update-maintenance-status/<int:record_id>/', views.update_maintenance_status),
 
     # Admin Management
     path('admin-organizations/', views.admin_organizations),
@@ -32,4 +38,7 @@ urlpatterns = [
     path('admin-machines/', views.admin_machines),
     path('admin-predictions/', views.admin_predictions),
     path('admin-reports/', views.admin_reports),
+    path('admin-alerts/', views.admin_alerts),
+    path('admin-maintenance/', views.admin_maintenance),
+    path('set-risk-threshold/', views.set_risk_threshold),
 ]
