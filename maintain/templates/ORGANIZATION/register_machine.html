@@ -1,0 +1,84 @@
+{% extends 'ORGANIZATION/base.html' %}
+{% load static %}
+
+{% block title %}REGISTER MACHINE // PREDICT-X Fleet{% endblock %}
+{% block page_title %}PROVISION INDUSTRIAL MACHINE ASSET{% endblock %}
+{% block page_subtitle %}Register mechanical equipment, attach sensor transducers, and initialize AI digital twin{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 850px;">
+  <div class="glass-panel cyber-panel" style="padding: 2.8rem;">
+    <h3 style="font-size: 1.5rem; color: #fff; margin-bottom: 0.5rem;">NEW MACHINERY REGISTRATION</h3>
+    <p class="font-tech text-cyan" style="font-size: 0.85rem; margin-bottom: 2rem;">FACILITY: {{ org.organization_name }}</p>
+
+    <form action="/add-machine/" method="POST">
+      {% csrf_token %}
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="form-group">
+          <label for="machine_name" class="form-label">&gt; MACHINE IDENTIFIER / NAME</label>
+          <input type="text" id="machine_name" name="machine_name" class="cyber-input" placeholder="e.g. Heavy Extruder H-9" required>
+        </div>
+
+        <div class="form-group">
+          <label for="serial_number" class="form-label">&gt; SERIAL NUMBER / ASSET TAG</label>
+          <input type="text" id="serial_number" name="serial_number" class="cyber-input" placeholder="e.g. SN-EXT-9021" required>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="form-group">
+          <label for="machine_type_id" class="form-label">&gt; EQUIPMENT TYPE</label>
+          <select id="machine_type_id" name="machine_type_id" class="cyber-input">
+            <option value="">-- Select Machine Type --</option>
+            {% for mt in machine_types %}
+            <option value="{{ mt.id }}">{{ mt.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="manufacturer" class="form-label">&gt; OEM MANUFACTURER</label>
+          <input type="text" id="manufacturer" name="manufacturer" class="cyber-input" placeholder="e.g. Siemens, Bosch, Kuka">
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="form-group">
+          <label for="location" class="form-label">&gt; PLANT LOCATION / BAY</label>
+          <input type="text" id="location" name="location" class="cyber-input" placeholder="e.g. Sector 2 - Bay 14">
+        </div>
+
+        <div class="form-group">
+          <label for="installation_date" class="form-label">&gt; COMMISSIONING / INSTALL DATE</label>
+          <input type="date" id="installation_date" name="installation_date" class="cyber-input" required>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="form-group">
+          <label for="operating_hours" class="form-label">&gt; CUMULATIVE OPERATING HOURS</label>
+          <input type="number" step="0.1" min="0" id="operating_hours" name="operating_hours" class="cyber-input" value="0" required>
+        </div>
+
+        <div class="form-group">
+          <label for="status" class="form-label">&gt; INITIAL OPERATING STATUS</label>
+          <select id="status" name="status" class="cyber-input">
+            <option value="Operational">Operational</option>
+            <option value="Under Maintenance">Under Maintenance</option>
+            <option value="Stopped">Stopped</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+        <button type="submit" class="cyber-btn cyber-btn-cyan cyber-btn-lg" style="flex: 1;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          PROVISION MACHINE ASSET
+        </button>
+        <a href="/machines/" class="cyber-btn cyber-btn-ghost">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
