@@ -7,206 +7,165 @@
 {% block page_subtitle %}Enterprise asset management, digital twin telemetry streams, and failure prevention{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container-fluid max-w-1400 py-4 px-3 px-lg-4">
   <!-- Organization Profile Overview & Quick KPI Cards -->
-  <div class="grid-4">
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-cyan" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">ENTERPRISE ENTITY</div>
-      <div class="font-display" style="font-size: 1.35rem; color: #fff; line-height: 1.2;">
-        {{ org.organization_name|default:"Apex Dynamics" }}
-      </div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.5rem;">
-        Sector: <span class="text-cyan">{{ org.industry_type|default:"Heavy Manufacturing" }}</span>
-      </div>
-    </div>
-
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-green" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">PLANT OVERALL HEALTH</div>
-      <div class="font-display text-green" style="font-size: 2.2rem; font-weight: 800;" data-telemetry-osc data-base="97.4" data-variance="0.3" data-unit="%">
-        97.4%
-      </div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">
-        Nominal fleet operational condition
+  <div class="row g-4 mb-4">
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="glass-panel cyber-panel h-100 p-4">
+        <div class="font-tech text-cyan small fw-bold mb-1"><i class="bi bi-building me-1"></i> ENTERPRISE ENTITY</div>
+        <div class="font-display h4 text-light mb-1">
+          {{ org.organization_name|default:"Apex Dynamics" }}
+        </div>
+        <div class="font-tech text-muted small mt-2">
+          Sector: <span class="text-cyan fw-semibold">{{ org.industry_type|default:"Heavy Manufacturing" }}</span>
+        </div>
       </div>
     </div>
 
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-purple" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">MONITORED ASSETS</div>
-      <div class="font-display text-purple" style="font-size: 2.2rem; font-weight: 800;">
-        8 Units
-      </div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">
-        48 Active sensory transducers
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="glass-panel cyber-panel h-100 p-4">
+        <div class="font-tech text-green small fw-bold mb-1"><i class="bi bi-heart-pulse me-1"></i> PLANT OVERALL HEALTH</div>
+        <div class="font-display text-green display-6 fw-bold mb-1" data-telemetry-osc data-base="97.4" data-variance="0.3" data-unit="%">
+          97.4%
+        </div>
+        <div class="font-tech text-muted small mt-1">
+          Nominal fleet operational condition
+        </div>
       </div>
     </div>
 
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-amber" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">MAINTENANCE WORK ORDERS</div>
-      <div class="font-display text-amber" style="font-size: 2.2rem; font-weight: 800;">
-        1 Pending
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="glass-panel cyber-panel h-100 p-4">
+        <div class="font-tech text-purple small fw-bold mb-1"><i class="bi bi-cpu me-1"></i> MONITORED ASSETS</div>
+        <div class="font-display text-purple display-6 fw-bold mb-1">
+          {{ total_machines|default:0 }} Units
+        </div>
+        <div class="font-tech text-muted small mt-1">
+          Operational: {{ operational_count|default:0 }}
+        </div>
       </div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">
-        Extruder H-9 scheduled in 72h
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="glass-panel cyber-panel h-100 p-4">
+        <div class="font-tech text-amber small fw-bold mb-1"><i class="bi bi-bell me-1"></i> OPEN ALERTS / RISK</div>
+        <div class="font-display text-amber display-6 fw-bold mb-1">
+          {{ open_alert_count|default:0 }}
+        </div>
+        <div class="font-tech text-muted small mt-1">
+          Failure Rate: {{ failure_rate|default:"0.0" }}%
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Monitored Machinery Equipment Matrix -->
-  <section class="glass-panel cyber-panel" id="equipment-section" style="margin: 2.5rem 0;">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+  <section class="glass-panel cyber-panel my-4 p-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
       <div>
-        <h3 style="font-size: 1.4rem; color: #fff; display: flex; align-items: center; gap: 0.6rem;">
-          <span class="text-cyan">&#9658;</span> MONITORED MACHINERY & ASSET STATUS
+        <h3 class="h4 text-light font-display d-flex align-items-center gap-2 mb-1">
+          <i class="bi bi-cpu-fill text-cyan"></i> MONITORED MACHINERY & ASSET MATRIX
         </h3>
-        <p class="font-tech text-muted" style="font-size: 0.88rem;">Physical assets synchronized with real-time neural digital twins</p>
+        <p class="font-tech text-muted mb-0 small">Physical assets synchronized with real-time neural digital twins</p>
       </div>
-      <button type="button" class="cyber-btn cyber-btn-cyan" onclick="alert('Digital twin calibration initiated across all edge transducers.')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-        Synchronize Digital Twins
-      </button>
+      <div class="d-flex gap-2">
+        <a href="/add-machine/" class="cyber-btn cyber-btn-cyan">
+          <i class="bi bi-plus-lg me-1"></i> Register Asset
+        </a>
+      </div>
     </div>
 
     <div class="table-responsive">
-      <table class="cyber-table">
+      <table class="table table-dark table-hover align-middle mb-0 cyber-table">
         <thead>
           <tr>
-            <th>ASSET ID</th>
-            <th>EQUIPMENT MODEL</th>
-            <th>LOCATION / CELL</th>
-            <th>TEMPERATURE</th>
-            <th>VIBRATION RMS</th>
-            <th>ESTIMATED RUL</th>
-            <th>HEALTH STATUS</th>
+            <th>ASSET NAME</th>
+            <th>SERIAL / MODEL</th>
+            <th>MANUFACTURER</th>
+            <th>LOCATION</th>
+            <th>STATUS</th>
+            <th>OPERATING HOURS</th>
             <th>ACTION</th>
           </tr>
         </thead>
         <tbody>
+          {% for m in machines %}
           <tr>
-            <td class="font-mono text-cyan">#MC-01</td>
-            <td style="color: #fff; font-weight: 700;">Rotary Kiln Motor A</td>
-            <td class="font-tech">Sector 4 - Bay 12</td>
-            <td><span data-telemetry-osc data-base="52.4" data-variance="0.8" data-unit="&deg;C">52.4&deg;C</span></td>
-            <td><span data-telemetry-osc data-base="1.1" data-variance="0.1" data-unit=" mm/s">1.1 mm/s</span></td>
-            <td class="font-mono text-green">4,200 hrs</td>
-            <td><span class="status-pill status-operational">&#9679; OPTIMAL</span></td>
-            <td><button class="cyber-btn cyber-btn-ghost" style="padding: 0.3rem 0.7rem; font-size: 0.78rem;">Inspect</button></td>
+            <td class="fw-bold text-light">
+              <a href="/machine/{{ m.id }}/" class="text-light text-decoration-none d-flex align-items-center gap-2">
+                <i class="bi bi-gear-fill text-cyan"></i> {{ m.machine_name }}
+              </a>
+            </td>
+            <td class="font-mono text-cyan">{{ m.serial_number }}</td>
+            <td class="font-tech">{{ m.manufacturer|default:"--" }}</td>
+            <td class="font-tech text-muted">{{ m.location|default:"Sector Alpha" }}</td>
+            <td>
+              {% if m.status == "Operational" %}
+                <span class="status-pill status-operational"><i class="bi bi-check-circle-fill me-1"></i> OPERATIONAL</span>
+              {% elif m.status == "Under Maintenance" %}
+                <span class="status-pill status-warning"><i class="bi bi-wrench me-1"></i> MAINTENANCE</span>
+              {% else %}
+                <span class="status-pill status-critical"><i class="bi bi-x-circle-fill me-1"></i> {{ m.status|upper }}</span>
+              {% endif %}
+            </td>
+            <td class="font-mono text-purple">{{ m.operating_hours }} hrs</td>
+            <td>
+              <div class="d-flex gap-1">
+                <a href="/machine/{{ m.id }}/" class="cyber-btn cyber-btn-ghost py-1 px-2 small">Inspect</a>
+                <a href="/add-sensor-data/{{ m.id }}/" class="cyber-btn cyber-btn-cyan py-1 px-2 small">+ Reading</a>
+              </div>
+            </td>
           </tr>
+          {% empty %}
           <tr>
-            <td class="font-mono text-cyan">#MC-02</td>
-            <td style="color: #fff; font-weight: 700;">Heavy Extruder H-9</td>
-            <td class="font-tech">Sector 2 - Polymer Line</td>
-            <td><span data-telemetry-osc data-base="84.2" data-variance="1.4" data-unit="&deg;C">84.2&deg;C</span></td>
-            <td><span data-telemetry-osc data-base="3.6" data-variance="0.3" data-unit=" mm/s">3.6 mm/s</span></td>
-            <td class="font-mono text-amber">72 hrs</td>
-            <td><span class="status-pill status-warning">&#9650; BEARING WEAR</span></td>
-            <td><button class="cyber-btn cyber-btn-cyan" style="padding: 0.3rem 0.7rem; font-size: 0.78rem;">Work Order</button></td>
+            <td colspan="7" class="text-center py-5 text-muted">
+              <i class="bi bi-cpu fs-1 text-cyan d-block mb-2"></i>
+              <span class="font-tech h6 text-cyan d-block">NO MACHINERY REGISTERED YET</span>
+              <span class="small">Click "+ Register Asset" above to add your first industrial machine.</span>
+            </td>
           </tr>
-          <tr>
-            <td class="font-mono text-cyan">#MC-03</td>
-            <td style="color: #fff; font-weight: 700;">Centrifugal Chiller 3</td>
-            <td class="font-tech">Sector 1 - Utility Room</td>
-            <td><span data-telemetry-osc data-base="38.7" data-variance="0.5" data-unit="&deg;C">38.7&deg;C</span></td>
-            <td><span data-telemetry-osc data-base="0.8" data-variance="0.1" data-unit=" mm/s">0.8 mm/s</span></td>
-            <td class="font-mono text-green">6,800 hrs</td>
-            <td><span class="status-pill status-operational">&#9679; OPTIMAL</span></td>
-            <td><button class="cyber-btn cyber-btn-ghost" style="padding: 0.3rem 0.7rem; font-size: 0.78rem;">Inspect</button></td>
-          </tr>
-          <tr>
-            <td class="font-mono text-cyan">#MC-04</td>
-            <td style="color: #fff; font-weight: 700;">5-Axis Milling CNC</td>
-            <td class="font-tech">Sector 3 - Clean Tooling</td>
-            <td><span data-telemetry-osc data-base="41.5" data-variance="0.6" data-unit="&deg;C">41.5&deg;C</span></td>
-            <td><span data-telemetry-osc data-base="1.3" data-variance="0.2" data-unit=" mm/s">1.3 mm/s</span></td>
-            <td class="font-mono text-green">3,100 hrs</td>
-            <td><span class="status-pill status-operational">&#9679; OPTIMAL</span></td>
-            <td><button class="cyber-btn cyber-btn-ghost" style="padding: 0.3rem 0.7rem; font-size: 0.78rem;">Inspect</button></td>
-          </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>
   </section>
 
   <!-- Live Sensory Curves & Telemetry Visualizer -->
-  <section class="glass-panel" id="telemetry-charts" style="margin: 2.5rem 0;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+  <section class="glass-panel my-4 p-4" id="telemetry-charts">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
       <div>
-        <h3 style="font-size: 1.4rem; color: #fff; display: flex; align-items: center; gap: 0.6rem;">
-          <span class="text-purple">&#9658;</span> SENSOR TELEMETRY SPECTRUM (EXTRUDER H-9)
+        <h3 class="h4 text-light font-display d-flex align-items-center gap-2 mb-1">
+          <i class="bi bi-graph-up-arrow text-purple"></i> SENSOR TELEMETRY SPECTRUM (LIVE FFT DECOMPOSITION)
         </h3>
-        <p class="font-tech text-muted" style="font-size: 0.88rem;">Live fast-Fourier transform (FFT) harmonic vibration & thermal dissipation graph</p>
+        <p class="font-tech text-muted mb-0 small">Real-time harmonic vibration & thermal dissipation spectral curve</p>
       </div>
-      <div style="display: flex; gap: 0.5rem;">
-        <span class="status-pill status-warning">SAMPLING FREQ: 20 KHz</span>
+      <div>
+        <span class="status-pill status-warning"><i class="bi bi-broadcast me-1"></i> SAMPLING FREQ: 20 KHz</span>
       </div>
     </div>
 
     <!-- Holographic visual simulation grid -->
-    <div style="background: rgba(3, 8, 20, 0.9); border: 1px solid var(--border-cyan); border-radius: 10px; padding: 2rem; position: relative; overflow: hidden;">
-      <div style="display: flex; justify-content: space-between; align-items: flex-end; height: 160px; gap: 8px; padding-bottom: 10px; border-bottom: 1px solid var(--border-subtle);">
-        <div style="flex: 1; height: 35%; background: linear-gradient(180deg, var(--cyan), transparent); border-radius: 4px 4px 0 0;"></div>
-        <div style="flex: 1; height: 50%; background: linear-gradient(180deg, var(--cyan), transparent); border-radius: 4px 4px 0 0;"></div>
-        <div style="flex: 1; height: 42%; background: linear-gradient(180deg, var(--cyan), transparent); border-radius: 4px 4px 0 0;"></div>
-        <div style="flex: 1; height: 68%; background: linear-gradient(180deg, var(--purple), transparent); border-radius: 4px 4px 0 0;"></div>
-        <div style="flex: 1; height: 85%; background: linear-gradient(180deg, var(--amber), transparent); border-radius: 4px 4px 0 0; box-shadow: 0 0 10px var(--amber);"></div>
-        <div style="flex: 1; height: 74%; background: linear-gradient(180deg, var(--amber), transparent); border-radius: 4px 4px 0 0;"></div>
-        <div style="flex: 1; height: 48%; background: linear-gradient(180deg, var(--cyan), transparent); border-radius: 4px 4px 0 0;"></div>
-        <div style="flex: 1; height: 30%; background: linear-gradient(180deg, var(--cyan), transparent); border-radius: 4px 4px 0 0;"></div>
-        <div style="flex: 1; height: 25%; background: linear-gradient(180deg, var(--cyan), transparent); border-radius: 4px 4px 0 0;"></div>
-        <div style="flex: 1; height: 40%; background: linear-gradient(180deg, var(--cyan), transparent); border-radius: 4px 4px 0 0;"></div>
-        <div style="flex: 1; height: 62%; background: linear-gradient(180deg, var(--purple), transparent); border-radius: 4px 4px 0 0;"></div>
-        <div style="flex: 1; height: 38%; background: linear-gradient(180deg, var(--cyan), transparent); border-radius: 4px 4px 0 0;"></div>
+    <div class="bg-dark border border-cyan rounded p-4 position-relative overflow-hidden">
+      <div class="d-flex justify-content-between align-items-end pb-2 border-bottom border-subtle" style="height: 160px; gap: 8px;">
+        <div class="flex-grow-1 rounded-top" style="height: 35%; background: linear-gradient(180deg, var(--cyan), transparent);"></div>
+        <div class="flex-grow-1 rounded-top" style="height: 50%; background: linear-gradient(180deg, var(--cyan), transparent);"></div>
+        <div class="flex-grow-1 rounded-top" style="height: 42%; background: linear-gradient(180deg, var(--cyan), transparent);"></div>
+        <div class="flex-grow-1 rounded-top" style="height: 68%; background: linear-gradient(180deg, var(--purple), transparent);"></div>
+        <div class="flex-grow-1 rounded-top shadow-amber" style="height: 85%; background: linear-gradient(180deg, var(--amber), transparent);"></div>
+        <div class="flex-grow-1 rounded-top" style="height: 74%; background: linear-gradient(180deg, var(--amber), transparent);"></div>
+        <div class="flex-grow-1 rounded-top" style="height: 48%; background: linear-gradient(180deg, var(--cyan), transparent);"></div>
+        <div class="flex-grow-1 rounded-top" style="height: 30%; background: linear-gradient(180deg, var(--cyan), transparent);"></div>
+        <div class="flex-grow-1 rounded-top" style="height: 25%; background: linear-gradient(180deg, var(--cyan), transparent);"></div>
+        <div class="flex-grow-1 rounded-top" style="height: 40%; background: linear-gradient(180deg, var(--cyan), transparent);"></div>
+        <div class="flex-grow-1 rounded-top" style="height: 62%; background: linear-gradient(180deg, var(--purple), transparent);"></div>
+        <div class="flex-grow-1 rounded-top" style="height: 38%; background: linear-gradient(180deg, var(--cyan), transparent);"></div>
       </div>
-      <div style="display: flex; justify-content: space-between; margin-top: 0.6rem; font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);">
+      <div class="d-flex justify-content-between mt-2 font-mono small text-dim">
         <span>50 Hz (1X)</span>
         <span>100 Hz (2X)</span>
         <span class="text-amber">185 Hz (Harmonic Peak - Bearing BPFO)</span>
         <span>300 Hz</span>
         <span>500 Hz</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Preventive Work Orders & Schedule -->
-  <section class="glass-panel cyber-panel" id="maintenance-schedule" style="margin-bottom: 3rem;">
-    <h3 style="font-size: 1.4rem; color: #fff; margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.6rem;">
-      <span class="text-green">&#9658;</span> AUTOMATED PREVENTIVE MAINTENANCE SCHEDULE
-    </h3>
-
-    <div class="grid-3">
-      <div class="glass-panel" style="background: rgba(4, 10, 24, 0.6); border-color: var(--amber);">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-          <span class="font-mono text-amber">WO #4902</span>
-          <span class="status-pill status-warning">URGENT &bull; 72H</span>
-        </div>
-        <h4 style="font-size: 1.05rem; color: #fff; margin-bottom: 0.4rem;">Bearing Replacement & Greasing</h4>
-        <p class="font-tech text-muted" style="font-size: 0.88rem;">Asset: Heavy Extruder H-9 (Sector 2)</p>
-        <div class="font-mono text-cyan" style="font-size: 0.8rem; margin-top: 0.8rem;">
-          Estimated Downtime: 2.5 hrs
-        </div>
-      </div>
-
-      <div class="glass-panel" style="background: rgba(4, 10, 24, 0.6); border-color: var(--border-cyan);">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-          <span class="font-mono text-cyan">WO #4903</span>
-          <span class="status-pill status-operational">PLANNED &bull; 14D</span>
-        </div>
-        <h4 style="font-size: 1.05rem; color: #fff; margin-bottom: 0.4rem;">Ultrasonic Seal & Flange Inspection</h4>
-        <p class="font-tech text-muted" style="font-size: 0.88rem;">Asset: Centrifugal Chiller 3</p>
-        <div class="font-mono text-cyan" style="font-size: 0.8rem; margin-top: 0.8rem;">
-          Estimated Downtime: 1.0 hr
-        </div>
-      </div>
-
-      <div class="glass-panel" style="background: rgba(4, 10, 24, 0.6); border-color: var(--border-purple);">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-          <span class="font-mono text-purple">WO #4904</span>
-          <span class="status-pill status-operational">PLANNED &bull; 30D</span>
-        </div>
-        <h4 style="font-size: 1.05rem; color: #fff; margin-bottom: 0.4rem;">Spindle Calibration & Thermal Map</h4>
-        <p class="font-tech text-muted" style="font-size: 0.88rem;">Asset: 5-Axis Milling CNC</p>
-        <div class="font-mono text-cyan" style="font-size: 0.8rem; margin-top: 0.8rem;">
-          Estimated Downtime: 0.5 hr
-        </div>
       </div>
     </div>
   </section>
