@@ -43,11 +43,12 @@
 
       <!-- Navigation Links -->
       <ul class="nav-links">
-        <li><a href="/org-home/" class="nav-link active">Fleet Dashboard</a></li>
-        <li><a href="#equipment-section" class="nav-link">Machinery Matrix</a></li>
-        <li><a href="#telemetry-charts" class="nav-link">Sensor Telemetry</a></li>
-        <li><a href="#maintenance-schedule" class="nav-link">Schedules</a></li>
-        <li><span class="entity-badge badge-org">ORGANIZATION PORTAL</span></li>
+        <li><a href="/org-home/" class="nav-link {% if request.path == '/org-home/' %}active{% endif %}">Dashboard</a></li>
+        <li><a href="/machines/" class="nav-link {% if '/machine' in request.path %}active{% endif %}">Machinery Fleet</a></li>
+        <li><a href="/add-sensor-data/" class="nav-link {% if '/add-sensor-data' in request.path %}active{% endif %}">Sensor Ingest</a></li>
+        <li><a href="/prediction-history/" class="nav-link {% if '/prediction' in request.path %}active{% endif %}">Predictions</a></li>
+        <li><a href="/profile/" class="nav-link {% if '/profile' in request.path %}active{% endif %}">Profile</a></li>
+        <li><span class="entity-badge badge-org">ENTERPRISE TENANT</span></li>
       </ul>
 
       <!-- User Info & Logout -->
@@ -91,11 +92,12 @@
   <!-- Secondary Organization Navigation Tabs -->
   <div class="secondary-nav">
     <div class="secondary-nav-container">
-      <a href="/org-home/" class="sub-link active">&#9656; Fleet Summary</a>
-      <a href="#equipment-section" class="sub-link">&#9656; Monitored Machinery</a>
-      <a href="#telemetry-charts" class="sub-link">&#9656; Vibration & Thermal Curves</a>
-      <a href="#maintenance-schedule" class="sub-link">&#9656; Preventive Work Orders</a>
-      <a href="#anomaly-log" class="sub-link">&#9656; Edge Warnings</a>
+      <a href="/org-home/" class="sub-link {% if request.path == '/org-home/' %}active{% endif %}">&#9656; Fleet Overview</a>
+      <a href="/machines/" class="sub-link {% if request.path == '/machines/' %}active{% endif %}">&#9656; Monitored Machinery</a>
+      <a href="/add-machine/" class="sub-link {% if request.path == '/add-machine/' %}active{% endif %}">&#9656; + Register Machine</a>
+      <a href="/add-sensor-data/" class="sub-link {% if '/add-sensor-data' in request.path %}active{% endif %}">&#9656; + Ingest Sensor Data</a>
+      <a href="/prediction-history/" class="sub-link {% if request.path == '/prediction-history/' %}active{% endif %}">&#9656; Predictive Logs</a>
+      <a href="/profile/" class="sub-link {% if request.path == '/profile/' %}active{% endif %}">&#9656; Facility Profile</a>
     </div>
   </div>
 
