@@ -80,27 +80,42 @@ class Machine(models.Model):
         return self.sensordata_set.order_by("-recorded_at").first()
 
 
+
 class SensorData(models.Model):
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
-    temperature = models.FloatField(help_text="degrees Celsius")
-    vibration = models.FloatField(help_text="mm/s", validators=[MinValueValidator(0)])
-    pressure = models.FloatField(help_text="bar", validators=[MinValueValidator(0)])
-    rotational_speed = models.FloatField(help_text="RPM", validators=[MinValueValidator(0)])
-    torque = models.FloatField(help_text="Nm", validators=[MinValueValidator(0)])
-    power_consumption = models.FloatField(help_text="kW", validators=[MinValueValidator(0)])
-    operating_hours = models.FloatField(
-        default=0, validators=[MinValueValidator(0)],
-        help_text="Cumulative run hours at the time of this reading"
+
+    air_temperature = models.FloatField(
+        help_text="Air temperature in Kelvin (K)",null=True, blank=True
     )
+    process_temperature = models.FloatField(
+        help_text="Process temperature in Kelvin (K)",null=True, blank=True
+    )
+    rotational_speed = models.FloatField(
+        validators=[MinValueValidator(0)],
+        help_text="Rotational speed in RPM",null=True, blank=True
+    )
+    torque = models.FloatField(
+        validators=[MinValueValidator(0)],
+        help_text="Torque in Nm",null=True, blank=True
+    )
+    tool_wear = models.FloatField(
+        validators=[MinValueValidator(0)],
+        help_text="Tool wear in minutes",null=True, blank=True
+    )
+
     recorded_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ["-recorded_at"]
-        indexes = [models.Index(fields=["machine", "-recorded_at"])]
+        indexes = [
+            models.Index(fields=["machine", "-recorded_at"])
+        ]
 
     def __str__(self):
-        return f"{self.machine.machine_name} @ {self.recorded_at:%Y-%m-%d %H:%M}"
-
+        return (
+            f"{self.machine.machine_name} "
+            f"@ {self.recorded_at:%Y-%m-%d %H:%M}"
+        )
 
 class Prediction(models.Model):
     RISK_CHOICES = [
