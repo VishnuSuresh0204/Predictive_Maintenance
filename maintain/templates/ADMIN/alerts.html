@@ -1,0 +1,125 @@
+{% extends 'ADMIN/base.html' %}
+{% load static %}
+
+{% block title %}GLOBAL ALERTS // PREDICT-X Admin Console{% endblock %}
+
+{% block page_title %}GLOBAL ANOMALY & RISK ALERTS{% endblock %}
+{% block page_subtitle %}Root-level monitoring of high-severity equipment risk events across all registered organizations{% endblock %}
+
+{% block content %}
+<div class="container">
+  <!-- Admin Summary Metrics -->
+  <div class="grid-3" style="margin-bottom: 2rem;">
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-red" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">TOTAL NETWORK ALERTS</div>
+      <div class="font-display text-red" style="font-size: 2.2rem; font-weight: 800;">
+        {{ alerts.count|default:0 }}
+      </div>
+      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">Telemetry anomalies flagged across all tenants</div>
+    </div>
+
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-amber" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">OPEN ALERTS</div>
+      <div class="font-display text-amber" style="font-size: 2.2rem; font-weight: 800;">
+        {{ open_count|default:0 }}
+      </div>
+      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">Awaiting tenant operator action</div>
+    </div>
+
+    <div class="glass-panel cyber-panel">
+      <div class="font-tech text-purple" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">HIGH SEVERITY CRITICAL</div>
+      <div class="font-display text-purple" style="font-size: 2.2rem; font-weight: 800;">
+        {{ high_severity_count|default:0 }}
+      </div>
+      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">High Risk failure predictions</div>
+    </div>
+  </div>
+
+  <!-- Global Alerts Table -->
+  <section class="glass-panel cyber-panel">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h3 style="font-size: 1.4rem; color: #fff; display: flex; align-items: center; gap: 0.6rem;">
+          <span class="text-red">&#9658;</span> ALL TENANT ALERTS MATRIX
+        </h3>
+        <p class="font-tech text-muted" style="font-size: 0.88rem;">Real-time risk dispatch console</p>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="cyber-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>SEVERITY</th>
+            <th>ORGANIZATION TENANT</th>
+            <th>MACHINE ASSET</th>
+            <th>ALERT MESSAGE</th>
+            <th>DATE</th>
+            <th>STATUS</th>
+            <th>OVERRIDE ACTION</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for alert in alerts %}
+          <tr>
+            <td class="font-mono text-cyan">#ALT-{{ alert.id }}</td>
+            <td>
+              {% if alert.severity == "High Risk" %}
+                <span class="status-pill status-critical">&#9888; HIGH RISK</span>
+              {% elif alert.severity == "Warning" %}
+                <span class="status-pill status-warning">&#9888; WARNING</span>
+              {% else %}
+                <span class="status-pill status-operational">&#9679; NORMAL</span>
+              {% endif %}
+            </td>
+            <td class="font-tech" style="color: var(--cyan); font-weight: 700;">
+              {{ alert.organization.organization_name }}
+            </td>
+            <td style="color: #fff; font-weight: 700;">
+              {{ alert.machine.machine_name }}
+            </td>
+            <td style="max-width: 320px; font-size: 0.88rem; color: var(--text-muted);">
+              {{ alert.message }}
+            </td>
+            <td class="font-mono" style="font-size: 0.82rem; color: var(--text-dim);">
+              {{ alert.created_at|date:"Y-m-d H:i" }}
+            </td>
+            <td>
+              {% if alert.status == "Open" %}
+                <span class="status-pill status-critical">OPEN</span>
+              {% elif alert.status == "Acknowledged" %}
+                <span class="status-pill status-warning">ACKNOWLEDGED</span>
+              {% else %}
+                <span class="status-pill status-operational">RESOLVED</span>
+              {% endif %}
+            </td>
+            <td>
+              <form method="POST" action="/admin-alerts/" style="display: flex; gap: 0.3rem;">
+                {% csrf_token %}
+                <input type="hidden" name="alert_id" value="{{ alert.id }}">
+                {% if alert.status == "Open" %}
+                  <button type="submit" name="action" value="acknowledge" class="cyber-btn cyber-btn-ghost" style="padding: 0.25rem 0.6rem; font-size: 0.75rem;">Ack</button>
+                  <button type="submit" name="action" value="resolve" class="cyber-btn cyber-btn-red" style="padding: 0.25rem 0.6rem; font-size: 0.75rem;">Resolve</button>
+                {% elif alert.status == "Acknowledged" %}
+                  <button type="submit" name="action" value="resolve" class="cyber-btn cyber-btn-red" style="padding: 0.25rem 0.6rem; font-size: 0.75rem;">Resolve</button>
+                {% else %}
+                  <span class="font-mono text-muted" style="font-size: 0.78rem;">Resolved</span>
+                {% endif %}
+              </form>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="8" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+              <div class="font-tech text-cyan" style="font-size: 1.1rem; margin-bottom: 0.5rem;">NO ACTIVE TELEMETRY ALERTS</div>
+              <span>No anomaly events logged across any tenant organization.</span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}
