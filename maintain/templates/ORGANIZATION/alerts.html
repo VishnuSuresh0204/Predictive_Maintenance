@@ -1,61 +1,75 @@
 {% extends 'ORGANIZATION/base.html' %}
 {% load static %}
 
-{% block title %}ALERTS & RISK NOTIFICATIONS // PREDICT-X{% endblock %}
+{% block title %}ALERTS &amp; RISK NOTIFICATIONS // PREDICT-X{% endblock %}
 
-{% block page_title %}FACILITY RISK ALERTS & WARNINGS{% endblock %}
+{% block page_title %}FACILITY RISK ALERTS &amp; WARNINGS{% endblock %}
 {% block page_subtitle %}Real-time sensory threshold anomalies and AI failure alert stream{% endblock %}
 
 {% block content %}
-<div class="container">
-  <!-- Summary Cards -->
-  <div class="grid-4" style="margin-bottom: 2rem;">
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-cyan" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">TOTAL ALERTS</div>
-      <div class="font-display text-cyan" style="font-size: 2.2rem; font-weight: 800;">
-        {{ alerts.count|default:0 }}
-      </div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">Recorded telemetry events</div>
-    </div>
+<div class="container py-4">
 
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-red" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">ACTIVE / OPEN</div>
-      <div class="font-display text-red" style="font-size: 2.2rem; font-weight: 800;">
-        {{ open_count|default:0 }}
+  <!-- Summary KPI Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+      <div class="glass-panel cyber-panel h-100">
+        <div class="font-tech text-cyan small fw-bold mb-2">
+          <i class="bi bi-bell me-1"></i> TOTAL ALERTS
+        </div>
+        <div class="font-display text-cyan" style="font-size: 2.2rem; font-weight: 800;">
+          {{ alerts.count|default:0 }}
+        </div>
+        <div class="font-tech text-muted small mt-1">Recorded telemetry events</div>
       </div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">Requires operator intervention</div>
     </div>
-
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-amber" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">ACKNOWLEDGED</div>
-      <div class="font-display text-amber" style="font-size: 2.2rem; font-weight: 800;">
-        {{ acknowledged_count|default:0 }}
+    <div class="col-6 col-lg-3">
+      <div class="glass-panel cyber-panel h-100">
+        <div class="font-tech text-danger small fw-bold mb-2">
+          <i class="bi bi-exclamation-triangle me-1"></i> ACTIVE / OPEN
+        </div>
+        <div class="font-display" style="font-size: 2.2rem; font-weight: 800; color: var(--red);">
+          {{ open_count|default:0 }}
+        </div>
+        <div class="font-tech text-muted small mt-1">Requires operator intervention</div>
       </div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">In-progress investigations</div>
     </div>
-
-    <div class="glass-panel cyber-panel">
-      <div class="font-tech text-green" style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem;">RESOLVED</div>
-      <div class="font-display text-green" style="font-size: 2.2rem; font-weight: 800;">
-        {{ resolved_count|default:0 }}
+    <div class="col-6 col-lg-3">
+      <div class="glass-panel cyber-panel h-100">
+        <div class="font-tech text-warning small fw-bold mb-2">
+          <i class="bi bi-eye me-1"></i> ACKNOWLEDGED
+        </div>
+        <div class="font-display text-warning" style="font-size: 2.2rem; font-weight: 800;">
+          {{ acknowledged_count|default:0 }}
+        </div>
+        <div class="font-tech text-muted small mt-1">In-progress investigations</div>
       </div>
-      <div class="font-tech text-muted" style="font-size: 0.8rem; margin-top: 0.4rem;">Successfully mitigated</div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="glass-panel cyber-panel h-100">
+        <div class="font-tech text-success small fw-bold mb-2">
+          <i class="bi bi-check-circle me-1"></i> RESOLVED
+        </div>
+        <div class="font-display text-success" style="font-size: 2.2rem; font-weight: 800;">
+          {{ resolved_count|default:0 }}
+        </div>
+        <div class="font-tech text-muted small mt-1">Successfully mitigated</div>
+      </div>
     </div>
   </div>
 
-  <!-- Alerts List Table -->
+  <!-- Alerts Table -->
   <section class="glass-panel cyber-panel">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
       <div>
-        <h3 style="font-size: 1.4rem; color: #fff; display: flex; align-items: center; gap: 0.6rem;">
-          <span class="text-red">&#9658;</span> TELEMETRY ANOMALY LOGS
+        <h3 class="h5 text-white d-flex align-items-center gap-2 mb-1">
+          <i class="bi bi-activity text-danger"></i> TELEMETRY ANOMALY LOGS
         </h3>
-        <p class="font-tech text-muted" style="font-size: 0.88rem;">Automated alerts triggered by risk engine</p>
+        <p class="font-tech text-muted small mb-0">Automated alerts triggered by risk engine</p>
       </div>
     </div>
 
     <div class="table-responsive">
-      <table class="cyber-table">
+      <table class="table cyber-table table-hover align-middle">
         <thead>
           <tr>
             <th>ID</th>
@@ -73,19 +87,19 @@
             <td class="font-mono text-cyan">#ALT-{{ alert.id }}</td>
             <td>
               {% if alert.severity == "High Risk" %}
-                <span class="status-pill status-critical">&#9888; HIGH RISK</span>
+                <span class="status-pill status-critical"><i class="bi bi-exclamation-triangle-fill me-1"></i> HIGH RISK</span>
               {% elif alert.severity == "Warning" %}
-                <span class="status-pill status-warning">&#9888; WARNING</span>
+                <span class="status-pill status-warning"><i class="bi bi-exclamation-circle-fill me-1"></i> WARNING</span>
               {% else %}
-                <span class="status-pill status-operational">&#9679; NORMAL</span>
+                <span class="status-pill status-operational"><i class="bi bi-check-circle-fill me-1"></i> NORMAL</span>
               {% endif %}
             </td>
-            <td style="color: #fff; font-weight: 700;">
-              <a href="/machine/{{ alert.machine.id }}/" style="color: #fff; text-decoration: none;">
-                {{ alert.machine.machine_name }}
+            <td class="fw-bold text-white">
+              <a href="/machine/{{ alert.machine.id }}/" class="text-white text-decoration-none">
+                <i class="bi bi-cpu me-1 text-cyan"></i>{{ alert.machine.machine_name }}
               </a>
             </td>
-            <td style="max-width: 320px; font-size: 0.9rem; color: var(--text-muted);">
+            <td class="font-tech text-muted" style="max-width: 300px; font-size: 0.88rem;">
               {{ alert.message }}
             </td>
             <td class="font-mono" style="font-size: 0.82rem; color: var(--text-dim);">
@@ -101,25 +115,27 @@
               {% endif %}
             </td>
             <td>
-              <form method="POST" action="/alerts/" style="display: flex; gap: 0.4rem;">
+              <form method="POST" action="/alerts/" class="d-flex gap-1">
                 {% csrf_token %}
                 <input type="hidden" name="alert_id" value="{{ alert.id }}">
                 {% if alert.status == "Open" %}
-                  <button type="submit" name="action" value="acknowledge" class="cyber-btn cyber-btn-ghost" style="padding: 0.25rem 0.65rem; font-size: 0.75rem;">Acknowledge</button>
+                  <button type="submit" name="action" value="acknowledge" class="cyber-btn cyber-btn-ghost" style="padding: 0.25rem 0.65rem; font-size: 0.75rem;">Ack</button>
                   <button type="submit" name="action" value="resolve" class="cyber-btn cyber-btn-cyan" style="padding: 0.25rem 0.65rem; font-size: 0.75rem;">Resolve</button>
                 {% elif alert.status == "Acknowledged" %}
                   <button type="submit" name="action" value="resolve" class="cyber-btn cyber-btn-cyan" style="padding: 0.25rem 0.65rem; font-size: 0.75rem;">Resolve</button>
                 {% else %}
-                  <span class="font-mono text-muted" style="font-size: 0.78rem;">Completed</span>
+                  <span class="font-mono text-muted" style="font-size: 0.78rem;"><i class="bi bi-check2-all me-1"></i> Done</span>
                 {% endif %}
               </form>
             </td>
           </tr>
           {% empty %}
           <tr>
-            <td colspan="7" style="text-align: center; padding: 3rem; color: var(--text-muted);">
-              <div class="font-tech text-cyan" style="font-size: 1.1rem; margin-bottom: 0.5rem;">NO ALERTS GENERATED</div>
-              <span>All machinery telemetry operating within safe parameters.</span>
+            <td colspan="7" class="text-center py-5">
+              <div class="font-tech text-cyan mb-2" style="font-size: 1.1rem;">
+                <i class="bi bi-shield-check me-2"></i> NO ALERTS GENERATED
+              </div>
+              <span class="text-muted">All machinery telemetry operating within safe parameters.</span>
             </td>
           </tr>
           {% endfor %}
