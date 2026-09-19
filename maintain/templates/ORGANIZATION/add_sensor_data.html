@@ -44,50 +44,36 @@
       <div class="row g-3">
         <div class="col-12 col-md-6">
           <div class="mb-3">
-            <label for="temperature" class="form-label font-tech text-cyan small fw-bold">&gt; TEMPERATURE (&deg;C) *</label>
-            <input type="number" step="0.1" id="temperature" name="temperature" class="form-control cyber-input" placeholder="e.g. 68.5" required>
+            <label for="air_temperature" class="form-label font-tech text-cyan small fw-bold">&gt; AIR TEMPERATURE (K) *</label>
+            <input type="number" step="0.1" id="air_temperature" name="air_temperature" class="form-control cyber-input" placeholder="e.g. 300.0" value="300.0" required>
           </div>
         </div>
 
         <div class="col-12 col-md-6">
           <div class="mb-3">
-            <label for="vibration" class="form-label font-tech text-cyan small fw-bold">&gt; VIBRATION RMS (mm/s) *</label>
-            <input type="number" step="0.01" id="vibration" name="vibration" class="form-control cyber-input" placeholder="e.g. 2.45" required>
-          </div>
-        </div>
-
-        <div class="col-12 col-md-6">
-          <div class="mb-3">
-            <label for="pressure" class="form-label font-tech text-cyan small fw-bold">&gt; FLUID / HYDRAULIC PRESSURE (bar) *</label>
-            <input type="number" step="0.1" id="pressure" name="pressure" class="form-control cyber-input" placeholder="e.g. 4.2" required>
+            <label for="process_temperature" class="form-label font-tech text-cyan small fw-bold">&gt; PROCESS TEMPERATURE (K) *</label>
+            <input type="number" step="0.1" id="process_temperature" name="process_temperature" class="form-control cyber-input" placeholder="e.g. 310.0" value="310.0" required>
           </div>
         </div>
 
         <div class="col-12 col-md-6">
           <div class="mb-3">
             <label for="rotational_speed" class="form-label font-tech text-cyan small fw-bold">&gt; ROTATIONAL SPEED (RPM) *</label>
-            <input type="number" step="1" id="rotational_speed" name="rotational_speed" class="form-control cyber-input" placeholder="e.g. 1750" required>
+            <input type="number" step="1" id="rotational_speed" name="rotational_speed" class="form-control cyber-input" placeholder="e.g. 1500" value="1500" required>
           </div>
         </div>
 
         <div class="col-12 col-md-6">
           <div class="mb-3">
             <label for="torque" class="form-label font-tech text-cyan small fw-bold">&gt; SHAFT TORQUE (Nm) *</label>
-            <input type="number" step="0.1" id="torque" name="torque" class="form-control cyber-input" placeholder="e.g. 48.2" required>
-          </div>
-        </div>
-
-        <div class="col-12 col-md-6">
-          <div class="mb-3">
-            <label for="power_consumption" class="form-label font-tech text-cyan small fw-bold">&gt; POWER CONSUMPTION (kW) *</label>
-            <input type="number" step="0.1" id="power_consumption" name="power_consumption" class="form-control cyber-input" placeholder="e.g. 15.8" required>
+            <input type="number" step="0.1" id="torque" name="torque" class="form-control cyber-input" placeholder="e.g. 40.0" value="40.0" required>
           </div>
         </div>
 
         <div class="col-12">
           <div class="mb-3">
-            <label for="operating_hours" class="form-label font-tech text-cyan small fw-bold">&gt; CURRENT MACHINE RUNNING HOURS *</label>
-            <input type="number" step="0.1" id="operating_hours" name="operating_hours" class="form-control cyber-input" placeholder="e.g. 1420.5" required>
+            <label for="tool_wear" class="form-label font-tech text-cyan small fw-bold">&gt; TOOL WEAR (MINUTES) *</label>
+            <input type="number" step="1" id="tool_wear" name="tool_wear" class="form-control cyber-input" placeholder="e.g. 108" value="108" required>
           </div>
         </div>
       </div>
