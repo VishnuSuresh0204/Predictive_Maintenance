@@ -72,27 +72,43 @@ def get_top_factors(features_dict=None, top_n=3):
     """Return the model's highest feature importances."""
 
     bundle = _load_bundle()
-
-    importances = bundle.get("feature_importances", {})
+    model = bundle.get("model")
     feature_order = bundle.get("features", [])
 
+    # First, try reading importances directly from the model.
+    importances = getattr(model, "feature_importances_", None)
+
+    # If the model is a pipeline, check its final estimator.
+    if importances is None and hasattr(model, "steps"):
+        final_estimator = model.steps[-1][1]
+        importances = getattr(
+            final_estimator,
+            "feature_importances_",
+            None,
+        )
+
+    # Fall back to importances saved in the bundle.
+    if importances is None:
+        importances = bundle.get(
+            "feature_importances",
+            bundle.get("importances"),
+        )
+
+    if importances is None:
+        return "Feature importance data unavailable."
+
+    # Convert dictionary or array into ranked pairs.
     if isinstance(importances, dict):
-        ranked = sorted(
-            importances.items(),
-            key=lambda item: item[1],
-            reverse=True,
-        )
+        ranked = list(importances.items())
     else:
-        ranked = sorted(
-            zip(feature_order, importances),
-            key=lambda item: item[1],
-            reverse=True,
-        )
+        ranked = list(zip(feature_order, importances))
+
+    ranked.sort(key=lambda item: item[1], reverse=True)
 
     return ", ".join(
-        name for name, _ in ranked[:top_n]
+        f"{name} ({float(score):.3f})"
+        for name, score in ranked[:top_n]
     )
-
 
 def predict_failure(
     features_dict,
