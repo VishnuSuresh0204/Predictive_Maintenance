@@ -283,10 +283,11 @@ def machine_detail(request, machine_id):
     alerts = Alert.objects.filter(machine=machine).order_by("-created_at")[:10]
 
     averages = SensorData.objects.filter(machine=machine).aggregate(
-        avg_temperature=Avg("temperature"),
-        avg_vibration=Avg("vibration"),
-        avg_pressure=Avg("pressure"),
+        avg_air_temp=Avg("air_temperature"),
+        avg_proc_temp=Avg("process_temperature"),
+        avg_speed=Avg("rotational_speed"),
         avg_torque=Avg("torque"),
+        avg_tool_wear=Avg("tool_wear"),
     )
 
     context = {
@@ -370,33 +371,38 @@ def add_sensor_data(request, machine_id=None):
         machine_id = request.POST.get("machine_id")
         machine = get_object_or_404(Machine, id=machine_id, organization=org)
 
-        numeric_fields = [
-            "temperature", "vibration", "pressure",
-            "rotational_speed", "torque", "power_consumption", "operating_hours",
-        ]
-        values = {}
         try:
-            for field in numeric_fields:
-                values[field] = float(request.POST.get(field, 0) or 0)
+            air_temp = float(request.POST.get("air_temperature", 300.0) or 300.0)
+            proc_temp = float(request.POST.get("process_temperature", 310.0) or 310.0)
+            rot_speed = float(request.POST.get("rotational_speed", 1500.0) or 1500.0)
+            torque_val = float(request.POST.get("torque", 40.0) or 40.0)
+            tool_wear_val = float(request.POST.get("tool_wear", 0.0) or 0.0)
         except ValueError:
             messages.error(request, "All sensor readings must be valid numbers.")
-            return render(request, "ORGANIZATION/add_sensor_data.html", {"org": org, "machines": machines})
+            return render(request, "ORGANIZATION/add_sensor_data.html", {"org": org, "machines": machines, "selected_machine_id": machine_id})
 
-        reading = SensorData.objects.create(machine=machine, **values)
-
-        # Keep the machine's cumulative hours in sync with the latest reading
-        if values["operating_hours"] > machine.operating_hours:
-            machine.operating_hours = values["operating_hours"]
-            machine.save()
+        reading = SensorData.objects.create(
+            machine=machine,
+            air_temperature=air_temp,
+            process_temperature=proc_temp,
+            rotational_speed=rot_speed,
+            torque=torque_val,
+            tool_wear=tool_wear_val,
+        )
 
         warning, high_risk = get_thresholds(org)
-        features = dict(values)
-        features["machine_age"] = machine.age_in_years
+        features = {
+            "Air temperature [K]": air_temp,
+            "Process temperature [K]": proc_temp,
+            "Rotational speed [rpm]": rot_speed,
+            "Torque [Nm]": torque_val,
+            "Tool wear [min]": tool_wear_val,
+        }
 
         try:
             result = predict_failure(features, warning=warning, high_risk=high_risk)
-        except FileNotFoundError:
-            messages.warning(request, f"Reading #{reading.id} saved, but the prediction model is not available yet.")
+        except Exception as e:
+            messages.warning(request, f"Reading #{reading.id} saved, but prediction error: {e}")
             return redirect(f"/machine/{machine.id}/")
 
         prediction = Prediction.objects.create(
@@ -432,7 +438,7 @@ def add_sensor_data(request, machine_id=None):
         )
         return redirect(f"/prediction/{prediction.id}/")
 
-    return render(request, "ORGANIZATION/add_sensor_data.html", {"org": org, "machines": machines})
+    return render(request, "ORGANIZATION/add_sensor_data.html", {"org": org, "machines": machines, "selected_machine_id": machine_id})
 
 
 def prediction_detail(request, prediction_id):
