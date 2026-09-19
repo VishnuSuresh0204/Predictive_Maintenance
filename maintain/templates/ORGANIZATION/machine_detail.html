@@ -45,21 +45,21 @@
   <div class="row g-4 mb-4">
     <div class="col-12 col-sm-6 col-xl-3">
       <div class="glass-panel cyber-panel h-100 p-4">
-        <div class="font-tech text-cyan small fw-bold mb-1"><i class="bi bi-thermometer-half me-1"></i> AVG TEMPERATURE</div>
+        <div class="font-tech text-cyan small fw-bold mb-1"><i class="bi bi-thermometer-half me-1"></i> AVG AIR TEMP</div>
         <div class="font-display display-6 text-light fw-bold mb-1">
-          {{ averages.avg_temperature|floatformat:1|default:"--" }}&deg;C
+          {{ averages.avg_air_temp|floatformat:1|default:"--" }} <span class="fs-6 text-muted font-mono">K</span>
         </div>
-        <div class="font-tech text-muted small">Stator thermal profile</div>
+        <div class="font-tech text-muted small">Ambient air temperature</div>
       </div>
     </div>
 
     <div class="col-12 col-sm-6 col-xl-3">
       <div class="glass-panel cyber-panel h-100 p-4">
-        <div class="font-tech text-purple small fw-bold mb-1"><i class="bi bi-activity me-1"></i> AVG VIBRATION</div>
+        <div class="font-tech text-purple small fw-bold mb-1"><i class="bi bi-thermometer-high me-1"></i> AVG PROCESS TEMP</div>
         <div class="font-display display-6 text-purple fw-bold mb-1">
-          {{ averages.avg_vibration|floatformat:2|default:"--" }} <span class="fs-6 text-muted font-mono">mm/s</span>
+          {{ averages.avg_proc_temp|floatformat:1|default:"--" }} <span class="fs-6 text-muted font-mono">K</span>
         </div>
-        <div class="font-tech text-muted small">Radial vibration RMS</div>
+        <div class="font-tech text-muted small">Process thermal profile</div>
       </div>
     </div>
 
@@ -67,7 +67,7 @@
       <div class="glass-panel cyber-panel h-100 p-4">
         <div class="font-tech text-green small fw-bold mb-1"><i class="bi bi-arrow-repeat me-1"></i> AVG SPEED</div>
         <div class="font-display display-6 text-green fw-bold mb-1">
-          {{ averages.avg_rotational_speed|floatformat:0|default:"--" }} <span class="fs-6 text-muted font-mono">RPM</span>
+          {{ averages.avg_speed|floatformat:0|default:"--" }} <span class="fs-6 text-muted font-mono">RPM</span>
         </div>
         <div class="font-tech text-muted small">Shaft rotation</div>
       </div>
@@ -100,26 +100,22 @@
         <thead>
           <tr>
             <th>RECORDED AT</th>
-            <th>TEMP (&deg;C)</th>
-            <th>VIBRATION (mm/s)</th>
-            <th>PRESSURE (bar)</th>
+            <th>AIR TEMP (K)</th>
+            <th>PROCESS TEMP (K)</th>
             <th>SPEED (RPM)</th>
             <th>TORQUE (Nm)</th>
-            <th>POWER (kW)</th>
-            <th>OPERATING HRS</th>
+            <th>TOOL WEAR (min)</th>
           </tr>
         </thead>
         <tbody>
           {% for r in readings %}
           <tr>
             <td class="font-mono text-cyan">{{ r.recorded_at|date:"Y-m-d H:i" }}</td>
-            <td class="font-mono">{{ r.temperature }}</td>
-            <td class="font-mono">{{ r.vibration }}</td>
-            <td class="font-mono">{{ r.pressure }}</td>
-            <td class="font-mono">{{ r.rotational_speed }}</td>
-            <td class="font-mono">{{ r.torque }}</td>
-            <td class="font-mono">{{ r.power_consumption }}</td>
-            <td class="font-mono text-muted">{{ r.operating_hours }}</td>
+            <td class="font-mono">{{ r.air_temperature }} K</td>
+            <td class="font-mono">{{ r.process_temperature }} K</td>
+            <td class="font-mono">{{ r.rotational_speed }} RPM</td>
+            <td class="font-mono">{{ r.torque }} Nm</td>
+            <td class="font-mono text-cyan">{{ r.tool_wear }} min</td>
           </tr>
           {% empty %}
           <tr>
