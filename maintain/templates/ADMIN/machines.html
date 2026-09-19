@@ -89,7 +89,7 @@
             <td class="font-mono">{{ item.machine.operating_hours }} hrs</td>
             <td>
               {% if item.latest_reading %}
-                <span class="font-mono text-cyan">{{ item.latest_reading.temperature }}&deg;C | {{ item.latest_reading.vibration }} mm/s</span>
+                <span class="font-mono text-cyan">{{ item.latest_reading.air_temperature }} K | {{ item.latest_reading.rotational_speed }} RPM</span>
               {% else %}
                 <span class="text-muted font-tech">No Telemetry</span>
               {% endif %}
