@@ -77,20 +77,14 @@
         <div class="row g-2">
           <div class="col-6">
             <div class="stat-pill p-2 border border-subtle rounded bg-dark">
-              <span class="stat-pill-label text-dim small">Temperature</span>
-              <span class="stat-pill-value">{{ prediction.sensor_data.temperature }}&deg;C</span>
+              <span class="stat-pill-label text-dim small">Air Temp</span>
+              <span class="stat-pill-value">{{ prediction.sensor_data.air_temperature }} K</span>
             </div>
           </div>
           <div class="col-6">
             <div class="stat-pill p-2 border border-subtle rounded bg-dark">
-              <span class="stat-pill-label text-dim small">Vibration RMS</span>
-              <span class="stat-pill-value text-purple">{{ prediction.sensor_data.vibration }} mm/s</span>
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="stat-pill p-2 border border-subtle rounded bg-dark">
-              <span class="stat-pill-label text-dim small">Pressure</span>
-              <span class="stat-pill-value">{{ prediction.sensor_data.pressure }} bar</span>
+              <span class="stat-pill-label text-dim small">Process Temp</span>
+              <span class="stat-pill-value text-purple">{{ prediction.sensor_data.process_temperature }} K</span>
             </div>
           </div>
           <div class="col-6">
@@ -105,10 +99,10 @@
               <span class="stat-pill-value">{{ prediction.sensor_data.torque }} Nm</span>
             </div>
           </div>
-          <div class="col-6">
+          <div class="col-12">
             <div class="stat-pill p-2 border border-subtle rounded bg-dark">
-              <span class="stat-pill-label text-dim small">Power</span>
-              <span class="stat-pill-value">{{ prediction.sensor_data.power_consumption }} kW</span>
+              <span class="stat-pill-label text-dim small">Tool Wear</span>
+              <span class="stat-pill-value text-cyan">{{ prediction.sensor_data.tool_wear }} min</span>
             </div>
           </div>
         </div>
