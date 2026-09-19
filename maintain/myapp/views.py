@@ -124,6 +124,7 @@ def register(request):
         user = Login.objects.create_user(
             username=username,
             password=password,
+            viewpassword=password,
             usertype="Organization",
         )
 
@@ -351,7 +352,7 @@ def delete_machine(request, machine_id):
 # SENSOR DATA + AI PREDICTION MODULE
 # ---------------------------------------------------------------------
 
-def add_sensor_data(request):
+def add_sensor_data(request, machine_id=None):
     """
     Operator enters a set of live readings for a machine. The reading is
     saved and immediately passed to the trained model, which produces a
